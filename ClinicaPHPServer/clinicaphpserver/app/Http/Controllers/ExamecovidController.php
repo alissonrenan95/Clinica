@@ -28,6 +28,7 @@ class ExamecovidController extends Controller
             $examecovidnovo->tosse=$request->tosse;
             $examecovidnovo->dordecabeca=$request->dordecabeca;
             $examecovidnovo->malestargeral=$request->malestargeral;
+            $examecovidnovo->doresnocorpo=$request->doresnocorpo;
             $examecovidnovo->dordegarganta=$request->dordegarganta;
             $examecovidnovo->dificuldadederespirar=$request->dificuldadederespirar;
             $examecovidnovo->faltadepaladar=$request->faltadepaladar;
@@ -62,6 +63,7 @@ class ExamecovidController extends Controller
             $examecoviddb->tosse=$request->tosse;
             $examecoviddb->dordecabeca=$request->dordecabeca;
             $examecoviddb->malestargeral=$request->malestargeral;
+            $examecoviddb->doresnocorpo=$request->doresnocorpo;
             $examecoviddb->dordegarganta=$request->dordegarganta;
             $examecoviddb->dificuldadederespirar=$request->dificuldadederespirar;
             $examecoviddb->faltadepaladar=$request->faltadepaladar;

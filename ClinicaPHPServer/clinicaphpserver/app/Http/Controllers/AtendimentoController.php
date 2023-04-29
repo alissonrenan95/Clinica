@@ -16,47 +16,60 @@ class AtendimentoController extends Controller
     }
 
     // Rota POST /Atendimento
-    //cria um atendimento pendente(concluido=false)
+    // Utilizando $pacienteid do body da request ($request)
+    // cria um atendimento pendente(concluido=false)
     public function create(Request $request){
-        $atendimentonovo=new Atendimento;
-        $atendimentonovo->pacienteid=$request->pacienteid;
-        $atendimentonovo->datahoraatendimento=new \DateTime('now',new \DateTimeZone('America/Sao_Paulo'));
-        $atendimentonovo->concluido=false;
+        $atendimentos=Atendimento::where([['concluido',false],['pacienteid', $request->pacienteid]])->get();
+        
+        try{
+            if($atendimentos->isEmpty()){
+                $atendimentonovo=new Atendimento;
+                $atendimentonovo->pacienteid=$request->pacienteid;
+                $atendimentonovo->datahoraatendimento=new \DateTime('now',new \DateTimeZone('America/Sao_Paulo'));
+                $atendimentonovo->concluido=false;
 
-        $examegeralnovo=new Examegeral;
-        //$examegeralnovo->atendimentoid=$atendimentos[0]->id;
-        $examegeralnovo->pressaosistolica=0;
-        $examegeralnovo->pressaodiastolica=0;
-        $examegeralnovo->pulsacao=0;
-        $examegeralnovo->respiracao=0;
-        $examegeralnovo->temperatura=0;
-        $examegeralnovo->concluido = false;
-        //$atendimentonovo->examegerals[]=array($examegeralnovo);
-        //$atendimentonovo->examegerals=[$examegeralnovo];
-        $examegeralnovo->atendimento()->associate($atendimentonovo);
-        //$examegeralnovo->save();
-        $examecovidnovo=new Examecovid;
-        //$examecovidnovo->atendimentoid=$atendimentos[0]->id;
-        $examecovidnovo->febre=false;
-        $examecovidnovo->coriza=false;
-        $examecovidnovo->narizentupido=false;
-        $examecovidnovo->cansaco=false;
-        $examecovidnovo->tosse=false;
-        $examecovidnovo->dordecabeca=false;
-        $examecovidnovo->malestargeral=false;
-        $examecovidnovo->dordegarganta=false;
-        $examecovidnovo->dificuldadederespirar=false;
-        $examecovidnovo->faltadepaladar=false;
-        $examecovidnovo->faltadeolfato=false;
-        $examecovidnovo->dificuldadedelocomocao=false;
-        $examecovidnovo->diarreia=false;
-        $examecovidnovo->concluido = false;
-        //$atendimentonovo->examecovids=[$examecovidnovo];
-        $examecovidnovo->atendimento()->associate($atendimentonovo);
-        //$examecovidnovo->save();
-        //$tendimentonovo->examecovids[0]=$examecovidnovo;
-        $atendimentonovo->save();
-        return response()->json($examegeralnovo->save()>0 && $examecovidnovo->save()>0);
+                $examegeralnovo=new Examegeral;
+                $examegeralnovo->pressaosistolica=0;
+                $examegeralnovo->pressaodiastolica=0;
+                $examegeralnovo->pulsacao=0;
+                $examegeralnovo->respiracao=0;
+                $examegeralnovo->temperatura=0;
+                $examegeralnovo->concluido = false;
+                $examegeralnovo->atendimento()->associate($atendimentonovo);
+
+                $examecovidnovo=new Examecovid;
+                $examecovidnovo->febre=false;
+                $examecovidnovo->coriza=false;
+                $examecovidnovo->narizentupido=false;
+                $examecovidnovo->cansaco=false;
+                $examecovidnovo->tosse=false;
+                $examecovidnovo->dordecabeca=false;
+                $examecovidnovo->malestargeral=false;
+                $examecovidnovo->doresnocorpo=false;
+                $examecovidnovo->dordegarganta=false;
+                $examecovidnovo->dificuldadederespirar=false;
+                $examecovidnovo->faltadepaladar=false;
+                $examecovidnovo->faltadeolfato=false;
+                $examecovidnovo->dificuldadedelocomocao=false;
+                $examecovidnovo->diarreia=false;
+                $examecovidnovo->concluido = false;
+                $examecovidnovo->atendimento()->associate($atendimentonovo);
+                
+                $atendimentonovo->save();
+                $examegeralnovo->atendimentoid=$atendimentonovo->id;
+                $examecovidnovo->atendimentoid=$atendimentonovo->id;
+                
+                return response()->json($examegeralnovo->save()>0 && $examecovidnovo->save()>0);
+            }
+            else{
+                return response()->json($atendimentos);
+            }
+
+        }
+        catch(exception $ex){
+            //return response()->json($ex);
+        }
+        return response()->json(false);
     }
     
     // Rota GET /Atendimento/{atendimentoid}
@@ -121,6 +134,7 @@ class AtendimentoController extends Controller
             $examecovidnovo->tosse=$request->tosse;
             $examecovidnovo->dordecabeca=$request->dordecabeca;
             $examecovidnovo->malestargeral=$request->malestargeral;
+            $examecovidnovo->doresnocorpo=$request->doresnocorpo;
             $examecovidnovo->dordegarganta=$request->dordegarganta;
             $examecovidnovo->dificuldadederespirar=$request->dificuldadederespirar;
             $examecovidnovo->faltadepaladar=$request->faltadepaladar;
@@ -181,6 +195,7 @@ class AtendimentoController extends Controller
             $examecoviddb->tosse=$request->tosse;
             $examecoviddb->dordecabeca=$request->dordecabeca;
             $examecoviddb->malestargeral=$request->malestargeral;
+            $examecoviddb->doresnocorpo=$request->doresnocorpo;
             $examecoviddb->dordegarganta=$request->dordegarganta;
             $examecoviddb->dificuldadederespirar=$request->dificuldadederespirar;
             $examecoviddb->faltadepaladar=$request->faltadepaladar;

@@ -40,7 +40,7 @@ Route::get( '/Paciente/cpf/{cpf}', [PacienteController::class, 'findPacienteByCp
 Route::get( '/Paciente/{pacienteid}', [PacienteController::class, 'findPacienteById']);
 Route::post('/Paciente/{pacienteid}', [PacienteController::class, 'update']);
 Route::get( '/Paciente/{pacienteid}/Atendimento',[PacienteController::class,'findAtendimentosByPacienteId']);
-Route::post('/Paciente/{pacienteid}/Atendimento',[PacienteController::class,'createAtendimentoByPaciente']);
+Route::post('/Paciente/{pacienteid}/Atendimento',[PacienteController::class,'createAtendimentoByPacienteId']);
 Route::get( '/Paciente/{pacienteid}/Atendimento/{atendimentoid}', [PacienteController::class,'findAtendimentoByPacienteIdAndAtendimentoId']);
 Route::post('/Paciente/{pacienteid}/Atendimento/{atendimentoid}', [PacienteController::class,'updateAtendimentoByPacienteIdAndAtendimentoId']);
 Route::get( '/Paciente/{pacienteid}/Atendimento/{atendimentoid}/Examegeral', [PacienteController::class,'findExamegeralByPacienteIdAndAtendimentoId']);
