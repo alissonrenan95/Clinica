@@ -21,4 +21,4 @@
  Projeto em desenvolvimento utilizando JS com React, Typescript, Axios, SignalR.
  Requisitos de software: NodeJS
 
-Estou Utilizando VSCode para Desenvolver e Workbench como SGBD do MySQL(não instalo o que vem no xampp).
+*Estou Utilizando VSCode para Desenvolver e Workbench como SGBD do MySQL(não instalo o que vem no xampp).*
