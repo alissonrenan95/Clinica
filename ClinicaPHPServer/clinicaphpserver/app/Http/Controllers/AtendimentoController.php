@@ -11,10 +11,7 @@ class AtendimentoController extends Controller
 {
     // Rota GET /Atendimento
     public function findAll(){
-        // $atendimentos=Atendimento::with('paciente')->all();
         $atendimentos=Atendimento::with('paciente')->orderBy('datahoraatendimento','desc')->get();
-        //return ['atendimentos'=>$atendimentos];
-        //return response($atendimentos, 200, ['Content-Type => application/json']);
         return response()->json($atendimentos);
     }
 
@@ -25,12 +22,41 @@ class AtendimentoController extends Controller
         $atendimentonovo->pacienteid=$request->pacienteid;
         $atendimentonovo->datahoraatendimento=new DateTime('now',new DateTimeZone('America/Sao_Paulo'));
         $atendimentonovo->concluido=false;
+
+        $examegeralnovo=new Examegeral;
+        //$examegeralnovo->atendimentoid=$atendimentos[0]->id;
+        $examegeralnovo->pressaosistolica=0;
+        $examegeralnovo->pressaodiastolica=0;
+        $examegeralnovo->pulsacao=0;
+        $examegeralnovo->respiracao=0;
+        $examegeralnovo->temperatura=0;
+        $examegeralnovo->concluido = false;
+        $atendimentonovo->examegerals=[$examegeralnovo];
+
+        $examecovidnovo=new Examecovid;
+        //$examecovidnovo->atendimentoid=$atendimentos[0]->id;
+        $examecovidnovo->febre=false;
+        $examecovidnovo->coriza=false;
+        $examecovidnovo->narizentupido=false;
+        $examecovidnovo->cansaco=false;
+        $examecovidnovo->tosse=false;
+        $examecovidnovo->dordecabeca=false;
+        $examecovidnovo->malestargeral=false;
+        $examecovidnovo->dordegarganta=false;
+        $examecovidnovo->dificuldadederespirar=false;
+        $examecovidnovo->faltadepaladar=false;
+        $examecovidnovo->faltadeolfato=false;
+        $examecovidnovo->dificuldadedelocomocao=false;
+        $examecovidnovo->diarreia=false;
+        $examecovidnovo->concluido = false;
+        $atendimentonovo->examecovids=[$examecovidnovo];
+
         return response()->json($atendimentonovo->save()>0);
     }
     
     // Rota GET /Atendimento/{atendimentoid}
     public function findAtendimentoById($atendimentoid){
-        $atendimentodb = Atendimento::with('paciente')->findOrFail($atendimentoid);
+        $atendimentodb = Atendimento::with('paciente')->where('id',$atendimentoid)->get();
         return response()->json($atendimentodb);
     }
 
@@ -107,7 +133,6 @@ class AtendimentoController extends Controller
 
     // Rota GET /Atendimento/{atendimentoid}/Examegeral/{examegeralid}
     public function findExamegeralByAtendimentoIdAndExamegeralId($atendimentoid, $examegeralid){
-        //$atendimentos=Atendimento::with('paciente')->with('examegerals')->where([['pacienteid',$pacienteid],['id',$atendimentoid]])->rightJoin()->get();
         $examegerals=Examegeral::with('atendimento.paciente')->where([['examegeral.id',$examegeralid],['examegeral.atendimentoid',$atendimentoid]])->leftJoin('atendimento', 'examegeral.atendimentoid','=','atendimento.id')->leftJoin('paciente','atendimento.pacienteid','=','paciente.id')->select('examegeral.*')->get(); //se quiser menos dados é só colocar . na string do select e selecionar a propriedade
         return response()->json($examegerals);
     }
@@ -133,7 +158,7 @@ class AtendimentoController extends Controller
     }
 
     // Rota GET /Atendimento/{atendimentoid}/Examecovid/{examecovidid}
-    public function findExamecovidByAtendimentoIdAndExamecovidId($pacienteid, $atendimentoid, $examecovidid){
+    public function findExamecovidByAtendimentoIdAndExamecovidId($atendimentoid, $examecovidid){
         $examecovids=Examecovid::with('atendimento.paciente')->where([['examecovid.id',$examecovidid],['examecovid.atendimentoid',$atendimentoid]])->leftJoin('atendimento', 'examecovid.atendimentoid','=','atendimento.id')->leftJoin('paciente','atendimento.pacienteid','=','paciente.id')->select('examecovid.*')->get(); //se quiser menos dados é só colocar . na string do select e selecionar a propriedade
         return response()->json($examecovids);
     }

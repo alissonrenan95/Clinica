@@ -60,7 +60,7 @@ Route::get( '/Atendimento/{atendimentoid}', [AtendimentoController::class, 'find
 Route::post('/Atendimento/{atendimentoid}', [AtendimentoController::class, 'update']);
 Route::get( '/Atendimento/{atendimentoid}/Examegeral/',[AtendimentoController::class,'findExamegeralByAtendimentoId']);
 Route::post('/Atendimento/{atendimentoid}/Examegeral/',[AtendimentoController::class,'createExamegeralByAtendimentoId']); //esta criando junto com atendimento
-Route::get( '/Atendimento/{atendimentoid}/Examecovid/',[AtendimentoController::class,'findExamecovidgeralByAtendimentoId']);
+Route::get( '/Atendimento/{atendimentoid}/Examecovid/',[AtendimentoController::class,'findExamecovidByAtendimentoId']);
 Route::post('/Atendimento/{atendimentoid}/Examecovid/',[AtendimentoController::class,'createExamecovidByAtendimentoId']); //esta criando junto com atendimento
 Route::get( '/Atendimento/{atendimentoid}/Examegeral/{examegeralid}',[AtendimentoController::class,'findExamegeralByAtendimentoIdAndExamegeralId']);
 Route::post('/Atendimento/{atendimentoid}/Examegeral/{examegeralid}',[AtendimentoController::class,'updateExamegeralByAtendimentoIdAndExamegeralId']);

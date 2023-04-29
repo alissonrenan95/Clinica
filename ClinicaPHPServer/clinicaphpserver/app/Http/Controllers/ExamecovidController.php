@@ -45,7 +45,7 @@ class ExamecovidController extends Controller
 
     // Rota GET /Examecovid/{atendimentoid}
     public function findExamecovidById($examecovidid){
-        $examecoviddb = Examecovid::with('atendimento')->findOrFail($examecovidid);
+        $examecoviddb = Examecovid::with('atendimento')->where('id',$examecovidid)->get();
         return response()->json($examecoviddb);
     }
 

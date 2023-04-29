@@ -37,7 +37,7 @@ class ExamegeralController extends Controller
 
     // Rota GET /Examegeral/{examegeralid}
     public function findExamegeralById($examegeralid){
-        $examegeraldb = Examegeral::with('atendimento')->findOrFail($examegeralid);
+        $examegeraldb = Examegeral::with('atendimento')->where('id',$examegeralid)->get();
         return response()->json($examegeraldb);
     }
 

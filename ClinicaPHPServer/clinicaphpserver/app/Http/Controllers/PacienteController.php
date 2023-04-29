@@ -37,7 +37,7 @@ class PacienteController extends Controller
 
     // Rota GET /Paciente/{pacienteid}
     public function findPacienteById($pacienteid){
-        $pacientedb = Paciente::findOrFail($pacienteid);
+        $pacientedb = Paciente::where('id',$pacienteid)->get();
         return response()->json($pacientedb);
     }
 
