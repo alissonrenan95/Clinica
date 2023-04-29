@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "0qh7dX1u0jiOefUvBei+M4Gu939pm9o1eiPqZKJ4zck=",
+  "Source": "ClinicaServer",
+  "BasePath": "_content/ClinicaServer",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

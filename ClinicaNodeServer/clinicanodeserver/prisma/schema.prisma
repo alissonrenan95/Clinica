@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model efmigrationshistory {
+  MigrationId    String @id @db.VarChar(150)
+  ProductVersion String @db.VarChar(32)
+
+  @@map("__efmigrationshistory")
+}
+
+model atendimento {
+  id                  Int      @id @default(autoincrement()) @db.UnsignedInt
+  pacienteid          Int      @db.UnsignedInt
+  datahoraatendimento DateTime @db.DateTime(6)
+  concluido           Boolean
+
+  @@index([pacienteid], map: "Atendimento_FKIndex1")
+}
+
+model examecovid {
+  id                     Int      @id @default(autoincrement()) @db.UnsignedInt
+  atendimentoid          Int      @db.UnsignedInt
+  febre                  Boolean
+  coriza                 Boolean
+  narizentupido          Boolean
+  cansaco                Boolean
+  tosse                  Boolean
+  dordecabeca            Boolean
+  doresnocorpo           Boolean
+  malestargeral          Boolean
+  dordegarganta          Boolean
+  dificuldadederespirar  Boolean
+  faltadepaladar         Boolean
+  faltadeolfato          Boolean
+  dificuldadedelocomocao Boolean
+  diarreia               Boolean
+  concluido              Boolean?
+
+  @@index([atendimentoid], map: "Examecovid_FKIndex1")
+}
+
+model examegeral {
+  id                Int     @id @default(autoincrement()) @db.UnsignedInt
+  atendimentoid     Int     @db.UnsignedInt
+  pressaosistolica  Int     @db.UnsignedInt
+  pressaodiastolica Int     @db.UnsignedInt
+  pulsacao          Int     @db.UnsignedInt
+  respiracao        Int     @db.UnsignedInt
+  temperatura       Float   @db.Float
+  concluido         Boolean
+
+  @@index([atendimentoid], map: "Examegeral_FKIndex1")
+}
+
+model paciente {
+  id             Int      @id @default(autoincrement()) @db.UnsignedInt
+  cpf            BigInt   @unique(map: "Paciente_uniqueindex") @db.UnsignedBigInt
+  nome           String   @db.VarChar(150)
+  datanascimento DateTime @db.DateTime(6)
+  telefone       BigInt   @db.UnsignedBigInt
+  urlimagem      String   @db.VarChar(200)
+}
