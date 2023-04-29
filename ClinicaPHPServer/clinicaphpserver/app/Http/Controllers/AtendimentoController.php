@@ -20,7 +20,7 @@ class AtendimentoController extends Controller
     public function create(Request $request){
         $atendimentonovo=new Atendimento;
         $atendimentonovo->pacienteid=$request->pacienteid;
-        $atendimentonovo->datahoraatendimento=new DateTime('now',new DateTimeZone('America/Sao_Paulo'));
+        $atendimentonovo->datahoraatendimento=new \DateTime('now',new \DateTimeZone('America/Sao_Paulo'));
         $atendimentonovo->concluido=false;
 
         $examegeralnovo=new Examegeral;
@@ -31,8 +31,10 @@ class AtendimentoController extends Controller
         $examegeralnovo->respiracao=0;
         $examegeralnovo->temperatura=0;
         $examegeralnovo->concluido = false;
-        $atendimentonovo->examegerals=[$examegeralnovo];
-
+        //$atendimentonovo->examegerals[]=array($examegeralnovo);
+        //$atendimentonovo->examegerals=[$examegeralnovo];
+        $examegeralnovo->atendimento()->associate($atendimentonovo);
+        //$examegeralnovo->save();
         $examecovidnovo=new Examecovid;
         //$examecovidnovo->atendimentoid=$atendimentos[0]->id;
         $examecovidnovo->febre=false;
@@ -49,9 +51,12 @@ class AtendimentoController extends Controller
         $examecovidnovo->dificuldadedelocomocao=false;
         $examecovidnovo->diarreia=false;
         $examecovidnovo->concluido = false;
-        $atendimentonovo->examecovids=[$examecovidnovo];
-
-        return response()->json($atendimentonovo->save()>0);
+        //$atendimentonovo->examecovids=[$examecovidnovo];
+        $examecovidnovo->atendimento()->associate($atendimentonovo);
+        //$examecovidnovo->save();
+        //$tendimentonovo->examecovids[0]=$examecovidnovo;
+        $atendimentonovo->save();
+        return response()->json($examegeralnovo->save()>0 && $examecovidnovo->save()>0);
     }
     
     // Rota GET /Atendimento/{atendimentoid}
