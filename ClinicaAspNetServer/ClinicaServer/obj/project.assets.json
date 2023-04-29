@@ -11494,11 +11494,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\aliss\\desktop\\repos\\ClinicaServer\\ClinicaServer\\ClinicaServer.csproj",
+      "projectUniqueName": "C:\\Users\\aliss\\Documents\\GitHub\\Clinica\\ClinicaAspNetServer\\ClinicaServer\\ClinicaServer.csproj",
       "projectName": "ClinicaServer",
-      "projectPath": "C:\\Users\\aliss\\desktop\\repos\\ClinicaServer\\ClinicaServer\\ClinicaServer.csproj",
+      "projectPath": "C:\\Users\\aliss\\Documents\\GitHub\\Clinica\\ClinicaAspNetServer\\ClinicaServer\\ClinicaServer.csproj",
       "packagesPath": "C:\\Users\\aliss\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\aliss\\desktop\\repos\\ClinicaServer\\ClinicaServer\\obj\\",
+      "outputPath": "C:\\Users\\aliss\\Documents\\GitHub\\Clinica\\ClinicaAspNetServer\\ClinicaServer\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

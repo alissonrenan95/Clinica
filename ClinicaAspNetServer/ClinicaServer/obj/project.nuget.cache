@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "8nV71dEFw6gKOWi6dcq4B45rHZbVixfcA6qcWFSnVsNCHeS0dxexyCfuykUmJAbcpsF8a7cGugCB9r7UJNXj4w==",
+  "dgSpecHash": "YEQYiZKum+n7BmEzOjJdETO1haEpQ94wByL4cEUm127IrQoU+SaFbGCeJmVMQjOV52OJ+urwQFB+OA2NTQAZjQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\aliss\\Desktop\\repos\\ClinicaServer\\ClinicaServer\\ClinicaServer.csproj",
+  "projectFilePath": "C:\\Users\\aliss\\Documents\\GitHub\\Clinica\\ClinicaAspNetServer\\ClinicaServer\\ClinicaServer.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\aliss\\.nuget\\packages\\entityframework\\6.4.4\\entityframework.6.4.4.nupkg.sha512",
     "C:\\Users\\aliss\\.nuget\\packages\\google.protobuf\\3.21.9\\google.protobuf.3.21.9.nupkg.sha512",
