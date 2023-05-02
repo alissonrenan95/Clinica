@@ -10,7 +10,7 @@ class ExamecovidController extends Controller
 {
     // Rota GET /Examecovid
     public function findAll(){
-        $examecovids=Examecovid::with('atendimento')->get();
+        $examecovids=Examecovid::with('atendimento')->orderBy('id','desc')->get();
         return response()->json($examecovids);
     }
 

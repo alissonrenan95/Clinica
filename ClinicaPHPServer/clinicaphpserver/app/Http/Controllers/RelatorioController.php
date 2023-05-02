@@ -27,7 +27,8 @@ class RelatorioController extends Controller
                             ->groupBy('ano','mes')
                             ->orderBy('ano','DESC')
                             ->orderBy('mes','DESC')
-                            ->get();
+                            ->get()
+                            ->keep(6);
 
         return response()->json($dados);
 

@@ -7,6 +7,7 @@ use App\models\Paciente;
 use App\models\Atendimento;
 use App\models\Examegeral;
 use App\models\Examecovid;
+use App\Utils\Utils;
 
 class PacienteController extends Controller
 {
@@ -21,11 +22,19 @@ class PacienteController extends Controller
     // Rota POST /Paciente
     public function create(Request $request){
         $pacientenovo=new Paciente;
-        $pacientenovo->cpf=$request->cpf;
+        if(!Utils::validateCPF($request->cpf)){
+            return response()->json(false);
+        }
+        $cpf = preg_replace( '/[^0-9]/is', '', $request->cpf );
+        $pacientenovo->cpf=$cpf;
         $pacientenovo->nome=$request->nome;
         $pacientenovo->datanascimento=$request->datanascimento;
-        $pacientenovo->telefone=$request->telefone;
-        $pacientenovo->urlimagem=$request->cpf.'.png';
+        $telefone = preg_replace( '/[^0-9]/is', '', $request->telefone );
+        if(strlen($telefone)!=11){
+            return response()->json(false);
+        }
+        $pacientenovo->telefone=$telefone;
+        $pacientenovo->urlimagem=$cpf.'.png';
         return response()->json($pacientenovo->save()>0);
     }
 
@@ -43,18 +52,22 @@ class PacienteController extends Controller
 
     // Rota POST /Paciente/{pacienteid}
     public function update(Request $request, $pacienteid){
-        $pacientedb = Paciente::where('cpf',$cpf)->get()[0];
-        $pacientedb->cpf=$request->cpf;
+
+        $pacientedb = Paciente::where('id',$pacienteid)->get()[0];
         $pacientedb->nome=$request->nome;
         $pacientedb->datanascimento=$request->datanascimento;
-        $pacientedb->telefone=$request->telefone;
+        $telefone = preg_replace( '/[^0-9]/is', '', $request->telefone );
+        if(strlen($telefone)!=11){
+            return response()->json(false);
+        }
+        $pacientedb->telefone=$telefone;
         $pacientedb->urlimagem=$request->cpf.'.png';
         return response()->json($pacientedb->save()>0);
     }
     
     // Rota GET /Paciente/{pacienteid}/Atendimento
     public function findAtendimentosByPacienteId($pacienteid){
-        $atendimentos=Atendimento::with('paciente')->where('pacienteid',$pacienteid)->get();
+        $atendimentos=Atendimento::with('paciente')->where('pacienteid',$pacienteid)->orderBy('datahoraatendimento','desc')->get();
         return response()->json($atendimentos);
     }
 

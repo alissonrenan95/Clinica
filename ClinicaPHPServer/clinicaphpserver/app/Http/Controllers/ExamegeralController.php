@@ -10,7 +10,7 @@ class ExamegeralController extends Controller
 {
     // Rota GET /Examegeral
     public function findAll(){
-        $examegerals=Examegeral::with('atendimento')->get();
+        $examegerals=Examegeral::with('atendimento')->orderBy('id','desc')->get();
         return response()->json($examegerals);
     }
 
