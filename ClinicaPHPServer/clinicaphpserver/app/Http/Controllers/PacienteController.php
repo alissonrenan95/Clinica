@@ -8,9 +8,12 @@ use App\models\Atendimento;
 use App\models\Examegeral;
 use App\models\Examecovid;
 use App\Utils\Utils;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 
 class PacienteController extends Controller
 {
+    
     // Rota GET /Paciente
     public function findAll(){
         $pacientes=Paciente::orderBy('nome','ASC')->get();
@@ -34,7 +37,14 @@ class PacienteController extends Controller
             return response()->json(false);
         }
         $pacientenovo->telefone=$telefone;
-        $pacientenovo->urlimagem=$cpf.'.png';
+
+        if($request->hasFile('pacienteimage') && $request->file('pacienteimage')->isValid()){
+            
+            $requestImage=$request->pacienteimage;
+            
+            $pacientenovo->urlimagem=$requestImage->store('img/pacientes', 'public');
+            //$requestImage->move(public_path('img/pacientes/'), $imageName);
+        }
         return response()->json($pacientenovo->save()>0);
     }
 
@@ -52,8 +62,8 @@ class PacienteController extends Controller
 
     // Rota POST /Paciente/{pacienteid}
     public function update(Request $request, $pacienteid){
-
         $pacientedb = Paciente::where('id',$pacienteid)->get()[0];
+        //$pacientedb=$request->only('nome','datanascimento','telefone','');
         $pacientedb->nome=$request->nome;
         $pacientedb->datanascimento=$request->datanascimento;
         $telefone = preg_replace( '/[^0-9]/is', '', $request->telefone );
@@ -61,7 +71,15 @@ class PacienteController extends Controller
             return response()->json(false);
         }
         $pacientedb->telefone=$telefone;
-        $pacientedb->urlimagem=$request->cpf.'.png';
+        if($request->hasFile('pacienteimage') && $request->file('pacienteimage')->isValid()){
+            if($pacientedb->urlimagem && Storage::disk('public')->exists('/img/pacientes/'.$pacientedb->urlimagem)){
+                Storage::disk('public')->delete('/img/pacientes/'.$pacientedb->urlimagem);
+            }
+            $requestImage=$request->pacienteimage;
+            
+            //$requestImage->move(public_path('img/pacientes/'), $imageName);
+            $pacientedb->urlimagem=basename($requestImage->store('img/pacientes','public'));
+        }
         return response()->json($pacientedb->save()>0);
     }
     
@@ -281,13 +299,17 @@ class PacienteController extends Controller
 
 
     
+    public function requestImage($urlimagem){
+        $urlcompleta = storage_path().'/app/public/img/pacientes/'.$urlimagem;
+        
+        if(!Storage::exists($urlcompleta)){
+            //App::abort(404);
+        }
+        
+        //return Image::make($urlcompleta)->response();*/
+        return response()->file($urlcompleta);
+    }
     
-    
-
-    
-
-    
-
 
 
 

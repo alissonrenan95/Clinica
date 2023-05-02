@@ -52,6 +52,7 @@ Route::post('/Paciente/{pacienteid}/Atendimento/{atendimentoid}/Examegeral/{exam
 Route::get( '/Paciente/{pacienteid}/Atendimento/{atendimentoid}/Examecovid/{examecovidid}', [PacienteController::class,'findExamecovidByPacienteIdAndAtendimentoIdAndExamecovidId']);
 Route::post('/Paciente/{pacienteid}/Atendimento/{atendimentoid}/Examecovid/{examecovidid}', [PacienteController::class,'updateExamecovidByPacienteIdAndAtendimentoIdAndExamecovidId']);
 
+Route::get('/Paciente/RequestImage/{urlimagem}', [PacienteController::class, 'requestImage']);
 
 //Rotas do controller Atendimento
 Route::get( '/Atendimento', [AtendimentoController::class, 'findAll']);
