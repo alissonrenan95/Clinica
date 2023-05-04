@@ -84,4 +84,4 @@ Route::post('/Examecovid/{examecovidid}',[ExamecovidController::class,'update'])
 
 
 //Rotas do controller Relatorio
-//Route::get( '/Relatorio/MonitorExamecovid',[RelatorioController::class, 'findMonitorExamecovid']);
+Route::get( '/Relatorio/MonitorExamecovid',[RelatorioController::class, 'findMonitorExamecovid']);

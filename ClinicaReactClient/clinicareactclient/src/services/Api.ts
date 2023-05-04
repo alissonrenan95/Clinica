@@ -14,7 +14,7 @@ const apiformdata = axios.create({
     //headers:{"Content-Type":"multiparti"}
    });
 
-
+export const URL_BASE_RELATORIO="Relatorio/";
 export const URL_BASE_PACIENTE="Paciente/";
 export const URL_BASE_ATENDIMENTO="Atendimento/";
 export const URL_BASE_EXAMEGERAL="Examegeral/";
