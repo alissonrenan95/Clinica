@@ -10,13 +10,24 @@ use App\models\Examecovid;
 use App\Utils\Utils;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
+use Carbon\Carbon;
 
 class PacienteController extends Controller
 {
     
     // Rota GET /Paciente
-    public function findAll(){
-        $pacientes=Paciente::orderBy('nome','ASC')->get();
+    //1º page will be pagenumber 1 and paginationsize will be 15 rows
+    public function findAll(Request $request){
+        $paginationsize = 15; //default number of rows by page
+        if($request->paginationsize){
+            $paginationsize=$request->paginationsize;
+        }
+        $pagenumber = 1; //default 1º page
+        if($request->pagenumber){
+            $pagenumber=$request->pagenumber;
+        }
+        
+        $pacientes=Paciente::orderBy('nome','ASC')->skip($paginationsize*($pagenumber-1))->take($paginationsize)->get();//->skip($pagenumber-1)->keep($paginationsize);
         //return ['pacientes'=>$pacientes];
         //return response($pacientes, 200, ['Content-Type => application/json']);
         return response()->json($pacientes);
@@ -31,7 +42,7 @@ class PacienteController extends Controller
         $cpf = preg_replace( '/[^0-9]/is', '', $request->cpf );
         $pacientenovo->cpf=$cpf;
         $pacientenovo->nome=$request->nome;
-        $pacientenovo->datanascimento=$request->datanascimento;
+        $pacientenovo->datanascimento=Carbon::createFromFormat('D/M/Y', $request->datanascimento);
         $telefone = preg_replace( '/[^0-9]/is', '', $request->telefone );
         if(strlen($telefone)!=11){
             return response()->json(false);
@@ -42,15 +53,15 @@ class PacienteController extends Controller
             
             $requestImage=$request->pacienteimage;
             
-            $pacientenovo->urlimagem=$requestImage->store('img/pacientes', 'public');
+            $pacientenovo->urlimagem=basename($requestImage->store('img/pacientes', 'public'));
             //$requestImage->move(public_path('img/pacientes/'), $imageName);
         }
         return response()->json($pacientenovo->save()>0);
     }
 
     // Rota GET /Paciente/cpf/{cpf}
-    public function findPacienteByCpf($cpf){
-        $pacientes=Paciente::where('cpf',$cpf)->get();
+    public function findPacienteByCpf($pacientecpf){
+        $pacientes=Paciente::where('cpf',$pacientecpf)->get();
         return response()->json($pacientes);
     }
 
@@ -62,30 +73,53 @@ class PacienteController extends Controller
 
     // Rota POST /Paciente/{pacienteid}
     public function update(Request $request, $pacienteid){
-        $pacientedb = Paciente::where('id',$pacienteid)->get()[0];
-        //$pacientedb=$request->only('nome','datanascimento','telefone','');
-        $pacientedb->nome=$request->nome;
-        $pacientedb->datanascimento=$request->datanascimento;
-        $telefone = preg_replace( '/[^0-9]/is', '', $request->telefone );
-        if(strlen($telefone)!=11){
-            return response()->json(false);
-        }
-        $pacientedb->telefone=$telefone;
-        if($request->hasFile('pacienteimage') && $request->file('pacienteimage')->isValid()){
-            if($pacientedb->urlimagem && Storage::disk('public')->exists('/img/pacientes/'.$pacientedb->urlimagem)){
-                Storage::disk('public')->delete('/img/pacientes/'.$pacientedb->urlimagem);
-            }
-            $requestImage=$request->pacienteimage;
+        try{
+           
+            $pacientedb = Paciente::where('id',$request->id)->get()[0];
+            //$pacientedb=$request->only('nome','datanascimento','telefone','');
+            $pacientedb->nome=$request->nome;
             
-            //$requestImage->move(public_path('img/pacientes/'), $imageName);
-            $pacientedb->urlimagem=basename($requestImage->store('img/pacientes','public'));
+            $pacientedb->datanascimento=Carbon::createFromFormat('d/m/Y', $request->datanascimento);
+            
+            $telefone="".$request->telefone;
+            $telefone = preg_replace( '/[^0-9]/is', '',$telefone);
+            if(strlen("".$telefone)!=11){
+                return response()->json(false);
+            }
+            
+            $pacientedb->telefone=$telefone;
+            if($request->hasFile('pacienteimage') && $request->file('pacienteimage')->isValid()){
+                if($pacientedb->urlimagem && Storage::disk('public')->exists('/img/pacientes/'.$pacientedb->urlimagem)){
+                    Storage::disk('public')->delete('/img/pacientes/'.$pacientedb->urlimagem);
+                }
+                
+                $requestImage=$request->pacienteimage;
+                
+                //$requestImage->move(public_path('img/pacientes/'), $imageName);
+                $pacientedb->urlimagem=basename($requestImage->store('img/pacientes','public'));
+                
+            }
+            return response()->json($pacientedb->save()>0);
+            //return response()->json("arghjkdrh");
+            
         }
-        return response()->json($pacientedb->save()>0);
+        catch(exception $err){
+            
+        }
+        return response()->json(false);
     }
     
     // Rota GET /Paciente/{pacienteid}/Atendimento
-    public function findAtendimentosByPacienteId($pacienteid){
-        $atendimentos=Atendimento::with('paciente')->where('pacienteid',$pacienteid)->orderBy('datahoraatendimento','desc')->get();
+    public function findAtendimentosByPacienteId(Request $request, $pacienteid){
+        $paginationsize = 15; //default number of rows by page
+        if($request->paginationsize){
+            $paginationsize=$request->paginationsize;
+        }
+        $pagenumber = 1; //default 1º page
+        if($request->pagenumber){
+            $pagenumber=$request->pagenumber;
+        }
+        $atendimentos=Atendimento::with('paciente')->where('pacienteid',$pacienteid)->orderBy('datahoraatendimento','desc')->skip($paginationsize*($pagenumber-1))->take($paginationsize)->get();
         return response()->json($atendimentos);
     }
 

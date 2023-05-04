@@ -1,170 +1,125 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
-import { findAtendimentos, findAtendimentosByPacienteId, findByPacienteId, newAtendimentoByPaciente} from '../../services/PacienteServices';
-import { FaEye, FaPlus } from 'react-icons/fa';
-import PacienteContext from '../../context/PacienteContext';
-import { HubConnectionBuilder, HubConnection,LogLevel } from '@microsoft/signalr';
+import { findAtendimentos, findAtendimentosByPacienteId, findAtendimentosByPagination, findByPacienteId, newAtendimentoByPaciente} from '../../services/PacienteServices';
+import { FaArrowLeft, FaArrowRight, FaBookOpen, FaCheck, FaEye, FaPlus } from 'react-icons/fa';
 import { Atendimento } from '../../dto/Atendimento';
-import { SocketConnection } from '../../dto/SocketConnection';
+import { URL_BASE_ATENDIMENTO, URL_BASE_EXAMECOVID, URL_BASE_EXAMEGERAL, URL_BASE_PACIENTE } from '../../services/Api';
+import { Paciente } from '../../dto/Paciente';
+import { updateAtendimento } from '../../services/AtendimentoServices';
 
 const AtendimentoPage = () => {
+    const [pagenumber, setPagenumber]=useState<number>(1);
+    const paginationsize=15;
     const navigate=useNavigate();
     const {pacienteid}=useParams();
-    const {paciente, setPaciente}=useContext<any>(PacienteContext);
+    const [paciente,setPaciente]=useState<Paciente>();
     const [atendimentos, setAtendimentos]=useState<Atendimento[]>([]);
-    const [connection, setConnection]=useState<HubConnection>();
-    const [messages, setMessages]=useState<any[]>();
-    const [users, setUsers]=useState<any[]>();
+
 
     useEffect(()=>{
-        /*findByPacienteId(pacienteid).then((response)=>{
-            if(response.status!==400 && response.status!==404){
-                if(response?.data[0]){
-                    setPaciente(response.data[0]);
+        buscarAtendimentos(Number(pacienteid));
+    },[pagenumber]);
+
+
+    async function buscarAtendimentos(idpaciente:number){
+        if(pagenumber>=1){
+            if(idpaciente){
+                setPaciente((await findByPacienteId(Number(idpaciente))).data[0]);
+                setAtendimentos((await findAtendimentosByPacienteId(Number(idpaciente),pagenumber, paginationsize)).data);
+            }
+            else{
+                let dados=(await findAtendimentosByPagination(pagenumber, paginationsize)).data;
+                if(dados.length===0){
+                    setPagenumber(pagenumber-1);
+                }
+                else{
+                    setAtendimentos(dados);
                 }
             }
-        });*/
-        if(pacienteid){
-            findAtendimentosByPacienteId(Number(pacienteid)).then((response)=>{
-                if(response.status!==400 && response.status!==404){
-                    if(response.data){
-                        setAtendimentos(response.data);
-                    }
-                }
-            });
-        }
-        else{
-            findAtendimentos().then((response)=>{
-                if(response.status!==400 && response.status!==404){
-                    if(response.data){
-                        setAtendimentos(response.data);
-                    }
-                }
-            });
-            
-        }
-        joinRoom(new Date().toLocaleDateString("pt-BR"),"atendimentos");
-        
-        
-
-    },[])
-
-
-    function buscarPaciente(idpaciente:number){
-        findByPacienteId(idpaciente).then((response)=>{
-            if(response.status!==400 && response.status!==404){
-                if(response?.data[0]){
-                    setPaciente(response.data[0]);
-                }
-            }
-        });
-    }
-
-    
-    const joinRoom = async (user:string, room:string)=>{
-        try{
-            const connection = new HubConnectionBuilder().withUrl("https://192.168.0.10:7102/ws/atendimentos").configureLogging(LogLevel.Information).build();
-            connection.on("UsersInRoom",(users)=>{
-                setUsers(users);
-            })
-            connection.on("ReceiveMessage", (user, message)=>{
-                findAtendimentos().then((response)=>{
-                    if(response.status!==400 && response.status!==404){
-                        if(response.data){
-                            setAtendimentos(response.data);
-                        }
-                    }
-                });
-                //setAtendimentos(messages=>[...messages, {user, message}])
-                
-                //console.log("message received: ", message);
-            });
-            
-            connection.onclose(e=>{
-                setConnection(undefined);
-                setMessages([]);
-                setUsers([]);
-            })
-            await connection.start();
-            
-            await connection.invoke("JoinRoom", {user, room});
-            
-            setConnection(connection);
-        }
-        catch(e){
-            console.log(e);
-        }
-    }
-
-
-    const configureConnectionListener=(connection:HubConnection)=>{
-
-    }
-
-    const closeConnection = async()=>{
-        try{
-            await connection?.stop();
-        }
-        catch(e){
-
-        }
-    }
-
-    const sendMessage = async(message:any)=>{
-        try{
-            await connection?.invoke("SendMessage", message);
-        }
-        catch(e){
-            console.log(e);
         }
     }
 
 
     const handleNewAtendimentoByPaciente=async (idpaciente:any)=>{
-        try{
-            let retorno = await newAtendimentoByPaciente(idpaciente);
-            if(retorno){
-                alert("Atendimento solicitado com sucesso, aguarde");
-                sendMessage(pacienteid);
+        if(idpaciente){
+            try{
+                let retorno = (await newAtendimentoByPaciente(idpaciente)).data;
+                if(retorno===true){
+                    alert("Atendimento solicitado com sucesso, aguarde");
+                    if(pagenumber>1){
+                        setPagenumber(1);
+                    }
+                    else{
+                        buscarAtendimentos(Number(idpaciente));
+                    }
+                    //sendMessage(pacienteid);
+                }
+                else{
+                    alert("Erro ao solicitar atendimento, o paciente possui atendimento em aberto");
+                }
             }
-            else{
-                alert("Erro ao Solicitar Atendimento")
+            catch(exception ){
+                alert("Erro ao solicitar atendimento");
             }
         }
-        catch(exception ){
-            alert("Erro ao enviar solicitação")
+        else{
+            navigate("/"+URL_BASE_ATENDIMENTO+"Novo");
         }
     }
 
-
+    const handleFinalizarAtendimento=async (atendimento:Atendimento)=>{
+        atendimento.concluido=true;
+        try{
+            let response=await updateAtendimento(atendimento);
+            if(response.data==true){
+                alert("Atendimento finalizado com sucesso");
+                buscarAtendimentos(Number(pacienteid));
+            }
+            else{
+                alert("Erro ao finalizar atendimento");
+            }
+        }
+        catch(exception){
+            alert("Erro ao finalizar atendimento");
+        }
+        
+    }
 
   return (
     <main>
         <h1>Atendimentos</h1>
         {(paciente)?<p>Paciente: {paciente?.nome}</p>:<></>}
-
-        {(paciente)?<button onClick={()=>handleNewAtendimentoByPaciente(pacienteid)}><FaPlus/>Solicitar Atendimento</button>:<></>}
+        <button onClick={()=>handleNewAtendimentoByPaciente(pacienteid)}><FaPlus/>Solicitar Atendimento</button>
         <br/>
         <table>
             <tbody>
             <tr>
                 <th>ID</th>
                 <th>Data</th>
+                {(!paciente)?<th>Paciente</th>:<></>}
                 <th>Concluido</th>
                 <th></th>
             </tr>
             {(atendimentos?.map(atendimento=>(
-                <tr style={{backgroundColor:(atendimento.concluido)?"green":""}}>
+                <tr key={atendimento.id} style={{backgroundColor:(atendimento.concluido)?"#55BB55":""}}>
                     <td>{atendimento.id}</td>
                     <td>{new Date(atendimento?.datahoraatendimento).toLocaleString("pt-BR")}</td>
+                    {(!paciente)?<td>{atendimento?.paciente?.nome}</td>:<></>}
                     <td>{(atendimento.concluido)?"Sim":"Não"}</td>
-                    <td><button onClick={()=>{buscarPaciente(atendimento.pacienteid);navigate(atendimento.id+"/Examegeral/")}}><FaEye/> Exame Geral</button></td>
+                    <td>
+                        {(atendimento?.examegerals)?(atendimento.examegerals[0].concluido)?<></>:<button onClick={()=>{navigate("/"+URL_BASE_PACIENTE+atendimento.pacienteid+"/"+URL_BASE_ATENDIMENTO+atendimento.id+"/"+URL_BASE_EXAMEGERAL)}}><FaEye/> Exame Geral</button>:<button onClick={()=>{navigate(atendimento.id+"/"+URL_BASE_EXAMEGERAL)}}><FaEye/> Exame Geral</button>}
+                        <button onClick={()=>{navigate("/"+URL_BASE_PACIENTE+atendimento.pacienteid+"/"+URL_BASE_ATENDIMENTO+atendimento.id+"/"+URL_BASE_EXAMECOVID)}}><FaEye/> Exame Covid</button>
+                        {(!atendimento?.concluido)?<button onClick={()=>{handleFinalizarAtendimento(atendimento)}}><FaCheck/> Finalizar</button>:<></>}
+                        <button onClick={()=>{navigate("/"+URL_BASE_PACIENTE+atendimento.pacienteid+"/"+URL_BASE_ATENDIMENTO+atendimento.id+"/Detalhes")}}><FaBookOpen/> Detalhes</button>
+                    </td>
                 </tr>)
             ))}
             </tbody>
         </table>
-        
-
+        <div>
+            <button onClick={()=>(pagenumber>1)?setPagenumber(pagenumber-1):""}><FaArrowLeft/></button>
+            <button onClick={()=>setPagenumber(pagenumber+1)}><FaArrowRight/></button>
+        </div>
     </main>
   )
 }

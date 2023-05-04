@@ -40,8 +40,10 @@
 main{
   display:flex;
   flex-direction:column;
-  width:100vw;
-  margin:0 10%;
+  width:80vw;
+  height: 100vh;
+  overflow-y: scroll;
+  margin:0 auto;
 }
 
 .controls{

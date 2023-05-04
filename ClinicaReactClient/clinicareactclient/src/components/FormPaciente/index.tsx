@@ -1,28 +1,72 @@
-import React, { useState } from 'react'
-import { convertCpfFormattedStringToNumber, convertCpfNumberToFormattedString, formatarCpf } from '../../services/Utils';
-import { FaPlus } from 'react-icons/fa';
-import { findAtendimentosByPacienteId, findByPacienteCpf, findByPacienteId, findExamesgeral, newPaciente } from '../../services/PacienteServices';
+import React, { useState, useEffect, useRef } from 'react'
+import { convertCpfFormattedStringToNumber, convertCpfNumberToFormattedString, validateCpf } from '../../services/Utils';
+import { FaPen } from 'react-icons/fa';
+import { createPaciente, findByPacienteId, updatePaciente } from '../../services/PacienteServices';
 import { Paciente } from '../../dto/Paciente';
+import { useParams } from 'react-router-dom';
+import InputMask from 'react-input-mask';
+import { URL_API, URL_BASE_PACIENTE } from '../../services/Api';
 
 
 const FormPaciente = () => {
+    const {pacienteid}=useParams();
     const [cpf, setCpf]=useState('');
     const [nome, setNome]=useState('');
     const [datanascimento, setDatanascimento]=useState('');
     const [telefone, setTelefone]=useState('');
+    const [urlimagem,setUrlimagem]=useState('');
+    const [pacienteimages,setPacienteimages]=useState<any>([]);
+    const inputimageref=useRef<any>(null);
+
+    useEffect(() => {
+        if(!isNaN(Number(pacienteid))){
+            buscarPacientePorId(Number(pacienteid));
+        }
+    }, [])
+    
+    async function buscarPacientePorId(idpaciente: number){
+        let pacientes= (await findByPacienteId(idpaciente)).data;
+        if(pacientes?.length>0){
+            setCpf(convertCpfNumberToFormattedString(Number(pacientes[0].cpf))||"");
+            setNome(pacientes[0].nome);
+            let datanasc=new Date(pacientes[0].datanascimento);
+            setDatanascimento(""+datanasc.getFullYear()+"-"+((datanasc.getMonth()+1<10)?"0":"")+(datanasc.getMonth()+1)+"-"+((datanasc.getDate()<10)?"0":"")+datanasc.getDate());
+            setTelefone(pacientes[0].telefone);
+            setUrlimagem(URL_API+URL_BASE_PACIENTE+"RequestImage/"+pacientes[0].urlimagem);
+        }
+        //setPacienteimages([])
+    }
 
     const handleSave=async (e:any)=>{
         e.preventDefault();
         try{
-            let paciente:Paciente={cpf:convertCpfFormattedStringToNumber(cpf)||0,nome,datanascimento:new Date(datanascimento),telefone:Number(telefone),urlimagem:""+convertCpfFormattedStringToNumber(cpf)||0+"png"};
-            let response=await newPaciente(paciente);
-            
-            if(response.data){
-                alert("Paciente Registrado com Sucesso");
-                setCpf("");
-                setNome("");
-                setDatanascimento("");
-                setTelefone("");
+            if(validateCpf(""+cpf.replace(".","").replace(".","").replace("-","")) && ((""+telefone).replace('(','').replace(')','').replace('-','')).length===11){
+                let datacomtimezone=new Date(datanascimento);
+                datacomtimezone.setUTCMinutes(datacomtimezone.getTimezoneOffset());
+                let paciente:Paciente={"cpf":convertCpfFormattedStringToNumber(cpf)||0,nome,"datanascimento":datacomtimezone,"telefone":Number((""+telefone).replace('(','').replace(')','').replace('-',''))};
+                
+                let response;
+                if(pacienteid){
+                    paciente.id=Number(pacienteid);
+                    response=await updatePaciente(paciente, pacienteimages[0]);
+                }
+                else{
+                    response=await createPaciente(paciente, pacienteimages[0]);
+                }
+                if(response.data==true){
+                    alert("Paciente Registrado com Sucesso");
+                    setCpf("");
+                    setNome("");
+                    setDatanascimento("");
+                    setTelefone("");
+                    setUrlimagem("");
+                    setPacienteimages([]);
+                    inputimageref.current.value=null;
+                    
+                }
+                else{
+                    alert("Dados Inválidos");
+                }
             }
             else{
                 alert("Dados Inválidos");
@@ -33,17 +77,17 @@ const FormPaciente = () => {
         }
     }
 
-    
-
   return (
     <main style={{display:"flex", flexDirection:"column", width:"100vw", margin:"0 10%"}}>
-        <h2>Cadastro de Paciente</h2>
-        <form onSubmit={handleSave}>
-            <div className="controls"><label htmlFor="cpf">CPF </label><input type="text" value={cpf} pattern="^\d{3}.?\d{3}.?\d{3}-?\d{2}$"  maxLength={14} onChange={(e)=>setCpf(formatarCpf(e.target.value))}/></div>
+        <h2>Paciente</h2>
+        <form onSubmit={handleSave} encType="multipart/form-data">
+            <img src={(pacienteimages.length>0)?URL.createObjectURL(pacienteimages[0]):urlimagem} style={{border:"2px solid #00F9F9",borderRadius:"50px", objectFit:"cover", width:"100px", height:"100px", maxWidth:"100px", maxHeight:"100px"}} loading="lazy" alt=""/>
+            <div className="controls"><label htmlFor="cpf">CPF </label><InputMask mask='999.999.999-99' value={cpf} disabled={(pacienteid)?true:false} onChange={(e:any)=>setCpf(e.target.value)}/></div>
             <div className="controls"><label htmlFor="nome">Nome </label><input type="text" value={nome} onChange={(e)=>setNome(e.target.value)}/></div>
             <div className="controls"><label htmlFor="datanascimento">Data Nascimento </label><input type="date" value={datanascimento} onChange={(e)=>setDatanascimento(e.target.value)}/></div>
-            <div className="controls"><label htmlFor="telefone">Telefone </label><input type="tel" value={telefone} onChange={(e)=>setTelefone(e.target.value)}/></div>
-            <button type="submit"><FaPlus/> Cadastrar</button>
+            <div className="controls"><label htmlFor="telefone">Telefone </label><InputMask mask='(99)99999-9999' value={telefone} onChange={(e)=>setTelefone(e.target.value)}/></div>
+            <div className="controls"><label htmlFor="pacienteimage">Foto</label><input type="file" accept=".jpg" ref={inputimageref} onChange={(e)=>setPacienteimages(e.target.files)}/></div>
+            <button type="submit"><FaPen/> Registrar</button>
         </form>
     </main>
   )

@@ -1,3 +1,5 @@
+import { Atendimento } from "./Atendimento";
+
 export interface Examegeral{
     id?: number;
     atendimentoid:number;
@@ -7,4 +9,5 @@ export interface Examegeral{
     respiracao:number;
     temperatura:number;
     concluido:boolean;
+    atendimento?:Atendimento;
 }

@@ -10,8 +10,17 @@ use App\models\Examecovid;
 class AtendimentoController extends Controller
 {
     // Rota GET /Atendimento
-    public function findAll(){
-        $atendimentos=Atendimento::with('paciente')->orderBy('datahoraatendimento','desc')->get();
+    //1º page will be pagenumber 1 and paginationsize will be 15 rows
+    public function findAll(Request $request){
+        $paginationsize = 15; //default number of rows by page
+        if($request->paginationsize){
+            $paginationsize=$request->paginationsize;
+        }
+        $pagenumber = 1; //default 1º page
+        if($request->pagenumber){
+            $pagenumber=$request->pagenumber;
+        }
+        $atendimentos=Atendimento::with('paciente')->orderBy('datahoraatendimento','desc')->skip($paginationsize*($pagenumber-1))->take($paginationsize)->get();
         return response()->json($atendimentos);
     }
 

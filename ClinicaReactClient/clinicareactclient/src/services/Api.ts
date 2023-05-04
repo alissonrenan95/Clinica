@@ -1,9 +1,17 @@
 import axios from 'axios';
 
+export const URL_API="http://127.0.0.1:8000/api/";
 const api = axios.create({
- baseURL: 'https://192.168.0.10:7102/api/',
+ //baseURL: 'https://192.168.0.10:7102/api/', aspnet
+ baseURL:URL_API,
  headers:{"Content-Type":"application/json"}
 });
+
+const apiformdata = axios.create({
+    //baseURL: 'https://192.168.0.10:7102/api/', aspnet
+    baseURL:URL_API,
+    //headers:{"Content-Type":"multiparti"}
+   });
 
 
 export const URL_BASE_PACIENTE="Paciente/";
@@ -24,8 +32,12 @@ export async function requestPostAsAsync(sourceurl:string, data:any){
     return await api.post(sourceurl,JSON.stringify(data));
 }
 
-export function requestPost(sourceurl:string, data:any){
-    return api.post(sourceurl,data);
+export async function requestPostFormDataAsAsync(sourceurl:string, data:FormData){
+    return await api.post(sourceurl,data, {headers:{"Content-Type": "multipart/form-data;"}});
+}
+
+export function requestPost(sourceurl:string, data:any, headers?:any){
+    return api.post(sourceurl,data,headers);
 }
 
 

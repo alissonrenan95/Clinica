@@ -125,26 +125,22 @@ export function validateCpf(cpf:string) {
     return true;
 }
 
-export function formatarCpf(cpfstring:string){
-    if(!isNaN(Number(cpfstring.replace(".","").replace("-","")))){
+export function formatarCpf(cpfstring:string):string{
+    if(!isNaN(Number(cpfstring.replace(".","").replace(".","").replace("-",""))) && cpfstring.length<=14){
 
-        if(cpfstring.length<cpfstring.length){
-            if(cpfstring.length===3 || cpfstring.length===7){
-                cpfstring+=".";
-            }
-            else if(cpfstring.length===11){
-                cpfstring+="-";
-            }
+        if(cpfstring.length===11){
+            return cpfstring+="-";
         }
-        else{
-            
-            if(cpfstring.length===12 || cpfstring.length===8 || cpfstring.length===4){
-                cpfstring=formatarCpf(cpfstring.substring(0,cpfstring.length-1));
-            }
+        else if(cpfstring.length===3 || cpfstring.length===7){
+            return cpfstring+=".";
+        }
+          
+        else if(cpfstring.length===12 || cpfstring.length===8 || cpfstring.length===4){
+            return cpfstring.substring(0,cpfstring.length-1);
         }
     }
     else{
-        cpfstring="";
+        return cpfstring="";
     }
     return cpfstring;
 }

@@ -4,5 +4,5 @@ export interface Paciente{
     nome: string;
     datanascimento:Date;
     telefone: number;
-    urlimagem:string
+    urlimagem?:string;
 }

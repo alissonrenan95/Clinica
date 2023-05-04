@@ -1,3 +1,5 @@
+import { Examecovid } from "./Examecovid";
+import { Examegeral } from "./Examegeral";
 import { Paciente } from "./Paciente";
 
 export interface Atendimento{
@@ -6,4 +8,6 @@ export interface Atendimento{
     datahoraatendimento:Date;
     concluido:boolean;
     paciente?:Paciente;
+    examegerals?:Examegeral[];
+    examecovids?:Examecovid[];
 }

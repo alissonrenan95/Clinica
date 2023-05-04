@@ -36,7 +36,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //Rotas do controller Paciente
 Route::get( '/Paciente', [PacienteController::class, 'findAll']);
 Route::post('/Paciente', [PacienteController::class, 'create']);
-Route::get( '/Paciente/cpf/{cpf}', [PacienteController::class, 'findPacienteByCpf']); //rota modificada do projeto principal para evitar conflitos(rota anterior /Paciente/cpf={cpf})
+Route::get( '/Paciente/cpf/{pacientecpf}', [PacienteController::class, 'findPacienteByCpf']); //rota modificada do projeto principal para evitar conflitos(rota anterior /Paciente/cpf={cpf})
 Route::get( '/Paciente/{pacienteid}', [PacienteController::class, 'findPacienteById']);
 Route::post('/Paciente/{pacienteid}', [PacienteController::class, 'update']);
 Route::get( '/Paciente/{pacienteid}/Atendimento',[PacienteController::class,'findAtendimentosByPacienteId']);

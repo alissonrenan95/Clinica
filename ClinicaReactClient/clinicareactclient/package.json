@@ -12,6 +12,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",
+    "react-input-mask": "^2.0.4",
     "react-pro-sidebar": "^1.0.0",
     "react-router-dom": "^6.10.0",
     "react-scripts": "5.0.1",
@@ -46,5 +47,8 @@
   "main": "index.js",
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@types/react-input-mask": "^3.0.2"
+  }
 }

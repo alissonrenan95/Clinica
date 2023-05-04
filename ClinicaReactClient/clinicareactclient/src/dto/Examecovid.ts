@@ -1,3 +1,5 @@
+import { Atendimento } from "./Atendimento";
+
 export interface Examecovid{
     id?: number;
     atendimentoid:number;
@@ -16,4 +18,5 @@ export interface Examecovid{
     Dificuldadedelocomocao:boolean;
     Diarreia:boolean;
     Concluido:boolean;
+    atendimento?:Atendimento;
 }
