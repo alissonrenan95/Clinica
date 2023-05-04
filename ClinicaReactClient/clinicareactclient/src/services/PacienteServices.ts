@@ -1,5 +1,5 @@
 import { Paciente } from "../dto/Paciente";
-import { requestGetAsAsync, URL_BASE_PACIENTE, URL_BASE_ATENDIMENTO, URL_BASE_EXAMEGERAL, requestPostAsAsync, requestPostFormDataAsAsync } from "./Api";
+import { requestGetAsAsync, URL_BASE_PACIENTE, URL_BASE_ATENDIMENTO, URL_BASE_EXAMEGERAL, requestPostAsAsync, requestPostFormDataAsAsync, URL_BASE_EXAMECOVID } from "./Api";
 
 
 export function findAll(){
@@ -29,6 +29,10 @@ export function findExamegeralByPacienteIdAndAtendimentoId(pacienteid:number, at
     return requestGetAsAsync(URL_BASE_PACIENTE+pacienteid+"/"+URL_BASE_ATENDIMENTO+atendimentoid+"/"+URL_BASE_EXAMEGERAL);
 }
 
+export function findExamecovidByPacienteIdAndAtendimentoId(pacienteid:number, atendimentoid:number){
+    return requestGetAsAsync(URL_BASE_PACIENTE+pacienteid+"/"+URL_BASE_ATENDIMENTO+atendimentoid+"/"+URL_BASE_EXAMECOVID);
+}
+
 export function findAtendimentos(){
     return requestGetAsAsync(URL_BASE_ATENDIMENTO);
 }
@@ -43,14 +47,18 @@ export function findExamesgeral(){
 
 
 export function createPaciente(paciente:Paciente, pacienteimage:any){
-    return requestPostAsAsync(URL_BASE_PACIENTE,paciente);
+    let formdata=new FormData();
+    Object.entries(paciente).forEach(([key, value], index) => {
+        formdata.append(key,value);
+    });
+    formdata.append("datanascimento", paciente.datanascimento.toLocaleDateString("pt-BR"));
+    formdata.append("pacienteimage", pacienteimage);
+    return requestPostAsAsync(URL_BASE_PACIENTE,formdata);
 }
 
 export function updatePaciente(paciente:Paciente, pacienteimage?:any){
     let formdata=new FormData();
     Object.entries(paciente).forEach(([key, value], index) => {
-        // name Bobby Hadz 0
-        // country Chile 1
         formdata.append(key,value);
     });
     formdata.append("datanascimento", paciente.datanascimento.toLocaleDateString("pt-BR"));

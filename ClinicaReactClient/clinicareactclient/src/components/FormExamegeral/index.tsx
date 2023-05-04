@@ -8,7 +8,7 @@ import { Atendimento } from "../../dto/Atendimento";
 import { findAtendimentoById } from "../../services/AtendimentoServices";
 import { findByPacienteId } from "../../services/PacienteServices";
 
-const FormExameGeral = () => {
+const FormExamegeral = () => {
   const navigate=useNavigate();
   const {pacienteid, atendimentoid, examegeralid}=useParams();
   const [paciente,setPaciente]=useState<Paciente>();
@@ -118,4 +118,4 @@ const FormExameGeral = () => {
     </div>
   );
 };
-export default FormExameGeral;
+export default FormExamegeral;

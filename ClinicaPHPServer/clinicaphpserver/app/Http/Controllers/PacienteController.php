@@ -74,19 +74,18 @@ class PacienteController extends Controller
     // Rota POST /Paciente/{pacienteid}
     public function update(Request $request, $pacienteid){
         try{
-           
             $pacientedb = Paciente::where('id',$request->id)->get()[0];
             //$pacientedb=$request->only('nome','datanascimento','telefone','');
             $pacientedb->nome=$request->nome;
             
             $pacientedb->datanascimento=Carbon::createFromFormat('d/m/Y', $request->datanascimento);
             
+            
             $telefone="".$request->telefone;
             $telefone = preg_replace( '/[^0-9]/is', '',$telefone);
             if(strlen("".$telefone)!=11){
                 return response()->json(false);
             }
-            
             $pacientedb->telefone=$telefone;
             if($request->hasFile('pacienteimage') && $request->file('pacienteimage')->isValid()){
                 if($pacientedb->urlimagem && Storage::disk('public')->exists('/img/pacientes/'.$pacientedb->urlimagem)){

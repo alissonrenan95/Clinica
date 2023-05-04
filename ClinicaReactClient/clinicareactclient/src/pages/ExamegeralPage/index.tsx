@@ -20,22 +20,21 @@ const ExamegeralPage = () => {
         buscarExamesgeral();
     },[pagenumber]);
 
-    async function buscarExamesgeral(){
+    const buscarExamesgeral=async ()=>{
         try{
             let idpaciente=Number(pacienteid);
             let idatendimento=Number(atendimentoid);
             let response;
             if(idatendimento){
                 if(idpaciente){
-                    response=await findExamegeralByPacienteIdAndAtendimentoId(Number(pacienteid), Number(atendimentoid));
+                    response=await findExamegeralByPacienteIdAndAtendimentoId(idpaciente, idatendimento);
                 }
                 else{
-                    response=await findExamegeralByAtendimentoId(Number(atendimentoid));
+                    response=await findExamegeralByAtendimentoId(idatendimento);
                 }
                 if(response.status===200){
-                    
                     setExamesgeral(response.data);
-                    if(response.data.length>0){
+                    if(response.data){
                         if(response.data[0].concluido){
                             if(response.data[0].atendimento){
                                 setAtendimento(response.data[0].atendimento);
@@ -60,7 +59,7 @@ const ExamegeralPage = () => {
                             }
                         }
                         else{
-                            navigate(""+examesgeral[0].id);
+                            navigate(""+response.data[0].id,{replace:true});
                         }
                     }
                     
@@ -75,6 +74,7 @@ const ExamegeralPage = () => {
         }
         
     }
+    
 
   return (
     <main>

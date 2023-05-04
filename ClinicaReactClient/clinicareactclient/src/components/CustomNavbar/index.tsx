@@ -22,8 +22,7 @@ const CustomNavbar = () => {
             <MenuItem icon={<FaHome/>} onClick={()=>{navigate("/")}} style={{textDecoration:"none", color:"#000000"}}><h2>Home</h2></MenuItem>
             <MenuItem icon={<FaUsers/>} onClick={()=>{navigate("/Paciente")}} style={{textDecoration:"none", color:"#000000"}}><h2>Pacientes</h2></MenuItem>
             <MenuItem icon={<FaUserCheck/>} onClick={()=>{navigate("/Atendimento")}} style={{textDecoration:"none", color:"#000000"}}><h2>Atendimentos</h2></MenuItem>
-            <MenuItem icon={<FaSearch/>} onClick={()=>{navigate("/ExameGeral")}} style={{textDecoration:"none", color:"#000000"}}><h2>Exames Gerais</h2></MenuItem>
-            <MenuItem icon={<FaSearch/>} onClick={()=>{navigate("/ExameCovid")}} style={{textDecoration:"none", color:"#000000"}}><h2>Exames Covid</h2></MenuItem>
+            <MenuItem icon={<FaSearch/>} onClick={()=>{navigate("/Relatorio")}} style={{textDecoration:"none", color:"#000000"}}><h2>Relatório</h2></MenuItem>
           </Menu>
         </Sidebar>
 

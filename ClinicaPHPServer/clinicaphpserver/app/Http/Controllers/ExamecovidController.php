@@ -54,8 +54,10 @@ class ExamecovidController extends Controller
     //finaliza examecovid(concluido=true)
     public function update(Request $request, $examecovidid){
         try{
-            $examecovids=Examecovid::where([['examecovid.id',$examecovidid],['examecovid.atendimentoid',$request->$atendimentoid]])->leftJoin('atendimento', 'examegeral.atendimentoid','=','atendimento.id')->leftJoin('paciente','atendimento.pacienteid','=','paciente.id')->select('examegeral.*')->get(); //se quiser menos dados é só colocar . na string do select e selecionar a propriedade
+            $examecovids=Examecovid::where([['examecovid.atendimentoid',$request->atendimentoid],['examecovid.id',$examecovidid]])->leftJoin('atendimento', 'examecovid.atendimentoid','=','atendimento.id')->leftJoin('paciente','atendimento.pacienteid','=','paciente.id')->select('examecovid.*')->get();; //se quiser menos dados é só colocar . na string do select e selecionar a propriedade
             $examecoviddb=$examecovids[0];
+            
+            
             $examecoviddb->febre=$request->febre;
             $examecoviddb->coriza=$request->coriza;
             $examecoviddb->narizentupido=$request->narizentupido;
@@ -74,7 +76,7 @@ class ExamecovidController extends Controller
             return response()->json($examecoviddb->save()>0);
         }
         catch(exception $ex){
-
+            return response()->json($ex);
         }
         return response()->json(false);
     }

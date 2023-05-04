@@ -10,6 +10,7 @@ const api = axios.create({
 const apiformdata = axios.create({
     //baseURL: 'https://192.168.0.10:7102/api/', aspnet
     baseURL:URL_API,
+    headers:{"Content-Type": "multipart/form-data"}
     //headers:{"Content-Type":"multiparti"}
    });
 
@@ -33,11 +34,11 @@ export async function requestPostAsAsync(sourceurl:string, data:any){
 }
 
 export async function requestPostFormDataAsAsync(sourceurl:string, data:FormData){
-    return await api.post(sourceurl,data, {headers:{"Content-Type": "multipart/form-data;"}});
+    return await apiformdata.post(sourceurl,data);
 }
 
-export function requestPost(sourceurl:string, data:any, headers?:any){
-    return api.post(sourceurl,data,headers);
+export function requestPost(sourceurl:string, data:any){
+    return api.post(sourceurl,JSON.stringify(data));
 }
 
 

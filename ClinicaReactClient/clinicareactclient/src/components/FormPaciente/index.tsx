@@ -22,19 +22,25 @@ const FormPaciente = () => {
         if(!isNaN(Number(pacienteid))){
             buscarPacientePorId(Number(pacienteid));
         }
-    }, [])
+    }, [pacienteid])
     
     async function buscarPacientePorId(idpaciente: number){
-        let pacientes= (await findByPacienteId(idpaciente)).data;
-        if(pacientes?.length>0){
-            setCpf(convertCpfNumberToFormattedString(Number(pacientes[0].cpf))||"");
-            setNome(pacientes[0].nome);
-            let datanasc=new Date(pacientes[0].datanascimento);
-            setDatanascimento(""+datanasc.getFullYear()+"-"+((datanasc.getMonth()+1<10)?"0":"")+(datanasc.getMonth()+1)+"-"+((datanasc.getDate()<10)?"0":"")+datanasc.getDate());
-            setTelefone(pacientes[0].telefone);
-            setUrlimagem(URL_API+URL_BASE_PACIENTE+"RequestImage/"+pacientes[0].urlimagem);
+        try{
+            let paciente= (await findByPacienteId(idpaciente)).data;
+            
+            if(paciente[0]){
+                setCpf(convertCpfNumberToFormattedString(Number(paciente[0].cpf))||"");
+                setNome(paciente[0].nome);
+                let datanasc=new Date(paciente[0].datanascimento);
+                setDatanascimento(""+datanasc.getFullYear()+"-"+((datanasc.getMonth()+1<10)?"0":"")+(datanasc.getMonth()+1)+"-"+((datanasc.getDate()<10)?"0":"")+datanasc.getDate());
+                setTelefone(paciente[0].telefone);
+                setUrlimagem(URL_API+URL_BASE_PACIENTE+"RequestImage/"+paciente[0].urlimagem);
+            }
         }
-        //setPacienteimages([])
+        catch(exception){
+            alert(exception);
+        }
+        //
     }
 
     const handleSave=async (e:any)=>{
@@ -73,6 +79,7 @@ const FormPaciente = () => {
             }
         }
         catch(exception){
+            alert(exception);
             alert("Erro ao Registrar o Paciente");
         }
     }

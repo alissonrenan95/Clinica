@@ -107,10 +107,10 @@ const AtendimentoPage = () => {
                     {(!paciente)?<td>{atendimento?.paciente?.nome}</td>:<></>}
                     <td>{(atendimento.concluido)?"Sim":"Não"}</td>
                     <td>
-                        {(atendimento?.examegerals)?(atendimento.examegerals[0].concluido)?<></>:<button onClick={()=>{navigate("/"+URL_BASE_PACIENTE+atendimento.pacienteid+"/"+URL_BASE_ATENDIMENTO+atendimento.id+"/"+URL_BASE_EXAMEGERAL)}}><FaEye/> Exame Geral</button>:<button onClick={()=>{navigate(atendimento.id+"/"+URL_BASE_EXAMEGERAL)}}><FaEye/> Exame Geral</button>}
-                        <button onClick={()=>{navigate("/"+URL_BASE_PACIENTE+atendimento.pacienteid+"/"+URL_BASE_ATENDIMENTO+atendimento.id+"/"+URL_BASE_EXAMECOVID)}}><FaEye/> Exame Covid</button>
+                        {(atendimento?.examegerals)?(atendimento.examegerals[0].concluido)?<></>:<button onClick={()=>{navigate("/"+URL_BASE_PACIENTE+atendimento.pacienteid+"/"+URL_BASE_ATENDIMENTO+atendimento.id+"/"+URL_BASE_EXAMEGERAL)}}><FaEye/> Exame Geral</button>:<button onClick={()=>{navigate("/"+URL_BASE_PACIENTE+atendimento.pacienteid+"/"+URL_BASE_ATENDIMENTO+atendimento.id+"/"+URL_BASE_EXAMEGERAL)}}><FaEye/> Exame Geral</button>}
+                        {(atendimento?.examecovids)?(atendimento.examecovids[0].concluido)?<></>:<button onClick={()=>{navigate("/"+URL_BASE_PACIENTE+atendimento.pacienteid+"/"+URL_BASE_ATENDIMENTO+atendimento.id+"/"+URL_BASE_EXAMECOVID)}}><FaEye/> Exame Covid</button>:<button onClick={()=>{navigate("/"+URL_BASE_PACIENTE+atendimento.pacienteid+"/"+URL_BASE_ATENDIMENTO+atendimento.id+"/"+URL_BASE_EXAMECOVID)}}><FaEye/> Exame Covid</button>}
                         {(!atendimento?.concluido)?<button onClick={()=>{handleFinalizarAtendimento(atendimento)}}><FaCheck/> Finalizar</button>:<></>}
-                        <button onClick={()=>{navigate("/"+URL_BASE_PACIENTE+atendimento.pacienteid+"/"+URL_BASE_ATENDIMENTO+atendimento.id+"/Detalhes")}}><FaBookOpen/> Detalhes</button>
+                        {(atendimento?.concluido)?<button onClick={()=>{navigate("/"+URL_BASE_PACIENTE+atendimento.pacienteid+"/"+URL_BASE_ATENDIMENTO+atendimento.id)}}><FaBookOpen/> Detalhes</button>:<></>}
                     </td>
                 </tr>)
             ))}
