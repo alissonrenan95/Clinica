@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { findAtendimentos, findAtendimentosByPacienteId, findAtendimentosByPagination, findByPacienteId, newAtendimentoByPaciente} from '../../services/PacienteServices';
-import { FaArrowLeft, FaArrowRight, FaBookOpen, FaCheck, FaEye, FaPlus } from 'react-icons/fa';
+import { FaArrowLeft, FaArrowRight, FaBars, FaBookOpen, FaCheck, FaCheckCircle, FaCircle, FaExclamationCircle, FaEye, FaPlus } from 'react-icons/fa';
 import { Atendimento } from '../../dto/Atendimento';
 import { URL_BASE_ATENDIMENTO, URL_BASE_EXAMECOVID, URL_BASE_EXAMEGERAL, URL_BASE_PACIENTE } from '../../services/Api';
 import { Paciente } from '../../dto/Paciente';
@@ -87,9 +87,11 @@ const AtendimentoPage = () => {
 
   return (
     <main>
+        <div>
         <h1>Atendimentos</h1>
         {(paciente)?<p>Paciente: {paciente?.nome}</p>:<></>}
         <button onClick={()=>handleNewAtendimentoByPaciente(pacienteid)}><FaPlus/>Solicitar Atendimento</button>
+        </div>
         <br/>
         <table>
             <tbody>
@@ -101,16 +103,27 @@ const AtendimentoPage = () => {
                 <th></th>
             </tr>
             {(atendimentos?.map(atendimento=>(
-                <tr key={atendimento.id} style={{backgroundColor:(atendimento.concluido)?"#55BB55":""}}>
+                <tr key={atendimento.id} >
                     <td>{atendimento.id}</td>
                     <td>{new Date(atendimento?.datahoraatendimento).toLocaleString("pt-BR")}</td>
                     {(!paciente)?<td>{atendimento?.paciente?.nome}</td>:<></>}
-                    <td>{(atendimento.concluido)?"Sim":"Não"}</td>
+                    <td><p style={{color:((atendimento.concluido)?"#00FF00":"#F2BE22")}}>{(atendimento.concluido)?<FaCheckCircle/>:<FaExclamationCircle/>}</p></td>
                     <td>
-                        {(atendimento?.examegerals)?(atendimento.examegerals[0].concluido)?<></>:<button onClick={()=>{navigate("/"+URL_BASE_PACIENTE+atendimento.pacienteid+"/"+URL_BASE_ATENDIMENTO+atendimento.id+"/"+URL_BASE_EXAMEGERAL)}}><FaEye/> Exame Geral</button>:<button onClick={()=>{navigate("/"+URL_BASE_PACIENTE+atendimento.pacienteid+"/"+URL_BASE_ATENDIMENTO+atendimento.id+"/"+URL_BASE_EXAMEGERAL)}}><FaEye/> Exame Geral</button>}
+                        <div >
+                            <div id="menutoggled">
+                                <button onClick={()=>{document.querySelector("#conteudotoggle"+atendimento.id)?.classList.toggle('conteudooculto')}}><FaBars/></button>
+                            </div>
+                            <div id={"conteudotoggle"+atendimento.id} className="conteudooculto conteudomenuopcoes">
+                                
+                                    {(atendimento?.examegerals)?(atendimento.examegerals[0].concluido)?<></>:<button onClick={()=>{navigate("/"+URL_BASE_PACIENTE+atendimento.pacienteid+"/"+URL_BASE_ATENDIMENTO+atendimento.id+"/"+URL_BASE_EXAMEGERAL)}}><FaEye/> Exame Geral</button>:<button onClick={()=>{navigate("/"+URL_BASE_PACIENTE+atendimento.pacienteid+"/"+URL_BASE_ATENDIMENTO+atendimento.id+"/"+URL_BASE_EXAMEGERAL)}}><FaEye/> Exame Geral</button>}
                         {(atendimento?.examecovids)?(atendimento.examecovids[0].concluido)?<></>:<button onClick={()=>{navigate("/"+URL_BASE_PACIENTE+atendimento.pacienteid+"/"+URL_BASE_ATENDIMENTO+atendimento.id+"/"+URL_BASE_EXAMECOVID)}}><FaEye/> Exame Covid</button>:<button onClick={()=>{navigate("/"+URL_BASE_PACIENTE+atendimento.pacienteid+"/"+URL_BASE_ATENDIMENTO+atendimento.id+"/"+URL_BASE_EXAMECOVID)}}><FaEye/> Exame Covid</button>}
                         {(!atendimento?.concluido)?<button onClick={()=>{handleFinalizarAtendimento(atendimento)}}><FaCheck/> Finalizar</button>:<></>}
                         {(atendimento?.concluido)?<button onClick={()=>{navigate("/"+URL_BASE_PACIENTE+atendimento.pacienteid+"/"+URL_BASE_ATENDIMENTO+atendimento.id)}}><FaBookOpen/> Detalhes</button>:<></>}
+                    
+                            </div>
+                        </div>
+
+
                     </td>
                 </tr>)
             ))}
@@ -119,6 +132,7 @@ const AtendimentoPage = () => {
         <div>
             <button onClick={()=>(pagenumber>1)?setPagenumber(pagenumber-1):""}><FaArrowLeft/></button>
             <button onClick={()=>setPagenumber(pagenumber+1)}><FaArrowRight/></button>
+            
         </div>
     </main>
   )

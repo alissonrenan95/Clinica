@@ -7,6 +7,7 @@ import { findExamegeralById, updateExamegeral } from "../../services/ExamegeralS
 import { Atendimento } from "../../dto/Atendimento";
 import { findAtendimentoById } from "../../services/AtendimentoServices";
 import { findByPacienteId } from "../../services/PacienteServices";
+import { convertCpfNumberToFormattedString } from "../../services/Utils";
 
 const FormExamegeral = () => {
   const navigate=useNavigate();
@@ -83,12 +84,11 @@ const FormExamegeral = () => {
   return (
     <div className="container text-center">
       <form onSubmit={handleUpdate}>
-
-        <h1 className='title'> Paciente {paciente?.nome}</h1>
+        <h2>Exame Geral</h2>
+        <p>Paciente: {paciente?.nome}</p>
        
-        <h3 className='subtitle'>Data Nacimento:  {(paciente)?new Date(paciente?.datanascimento).toLocaleDateString("pt-BR"):""}
-      </h3>
-        <h3 className='subtitle'>CPF: {paciente?.cpf}</h3>
+        <p>Data Nacimento:  {(paciente)?new Date(paciente?.datanascimento).toLocaleDateString("pt-BR"):""}</p>
+        <p>CPF: {(paciente)?convertCpfNumberToFormattedString(paciente.cpf):""}</p>
 
         <div>
             <label htmlFor="pressaosistolica">Pressão Sistólica</label>

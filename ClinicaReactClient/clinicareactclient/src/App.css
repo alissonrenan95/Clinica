@@ -37,34 +37,122 @@
   }
 }
 
+body{
+  overflow-y: hidden;
+}
+
 main{
   display:flex;
   flex-direction:column;
-  width:80vw;
+  width:100vw;
+  padding:0 0vw;
   height: 100vh;
   overflow-y: scroll;
   margin:0 auto;
 }
 
-.controls{
-  padding:1rem;
-}
+
 table{
-  width:100%;
+  max-width:100%;
   border:2px solid;
 }
 table tr td, table tr th{
   border:1px solid;
 }
 table tr:nth-child(even){
-  background-color: #CCCCCC;
+  background-color: #C2F2ED;
 }
 table tr:first-child{
-  background-color: #777777;
+  background-color: #49A69C;
 }
 
+.conteudooculto{
+  display: none;
+}
+.conteudomenuopcoes{
+  position:absolute;
+  background:white;
+  border: 0.1rem solid;
+  background:#49A69C;
+  box-shadow: 0.2rem 0.1rem 0.2rem #282c34;
+  border-radius: 0.2rem;
+  right: 0;
+}
+ul{
+  list-style:none;
+}
+a{
+  text-decoration: none;
+}
 
+button{
+  background-color: #1B594E;
+  color:#F2F2F2;
+  border-radius:0.2rem;
+  padding:0.3rem 0.5rem;
+  cursor: pointer;
+}
 
+.grafico{
+  width:44%;
+  background:"#f2f2f2";
+  border-radius:2rem;
+  box-shadow: 0.5rem 0.5rem 0.5rem #666;
+  margin:3%;
+  background-color: #C2F2ED;
+}
 
+.graficos{
+  display:flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 100%;
+}
+@media(max-width:992px){
+  .grafico{
+    width:100%;
+    
+  }
+}
 
-
+form{
+  background-color: #f2f2f2;
+  border: 0.1rem solid;
+  margin: 0 auto;
+  max-width: 992px;
+  display: flex;
+  flex-direction: column;
+  padding:2%;
+  border-radius: 1rem;
+  box-shadow: 0.5rem 0.5rem 0.5rem #282c34;
+}
+.controls{
+  display: flex;
+  flex-direction: column;
+  padding:1rem;
+}
+.controls>label{
+  text-align: left;
+}
+.controls>input{
+  height: 1.5rem;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+}
+.align-items-center{
+  align-items: center;
+}
+form img{
+  background-color: #f2f2f2;
+  border:2px solid #1B594E;
+  border-radius:50%;
+  object-fit:cover;
+  width:100px;
+  height:100px;
+  max-width:100px;
+  max-height:100px;
+}
+h1,h2,h3{
+  color: #1B594E;
+}

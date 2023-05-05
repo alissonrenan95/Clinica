@@ -13,9 +13,9 @@ const CustomNavbar = () => {
 
   return (
     
-        <Sidebar style={{ height: "100vh", position:"sticky", top:0, backgroundColor:"#00F9F9"}}>
+        <Sidebar style={{ height: "100vh", position:"sticky", top:0, backgroundColor:"#49A69C"}}>
           <Menu>
-            <MenuItem icon={<FaBars/>} onClick={()=>{collapseSidebar();}} style={{ textAlign: "center" , backgroundColor:"#CCCCCC"}}>
+            <MenuItem icon={<FaBars/>} onClick={()=>{collapseSidebar();}} style={{ textAlign: "center" , backgroundColor:"#1B594E", color:"#F2F2F2"}}>
               <h2>Menu</h2>
             </MenuItem>
 

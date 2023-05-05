@@ -45,10 +45,11 @@ const FormAtendimento = () => {
 
   return (
     <main>
-      <h2>Atendimento</h2>
+      
       <form onSubmit={handleSave}>
-              <div className="controls"><label htmlFor="cpf">CPF </label><InputMask mask='999.999.999-99' value={cpf} onChange={(e:any)=>setCpf(e.target.value)}/></div>
-              <button type="submit"><FaPen/> Registrar</button>
+        <h2>Atendimento</h2>
+        <div className="controls"><label htmlFor="cpf">CPF </label><InputMask mask='999.999.999-99' value={cpf} placeholder='___.___.___-__' onChange={(e:any)=>setCpf(e.target.value)}/></div>
+        <button type="submit"><FaPen/> Registrar</button>
       </form>
     </main>
   )

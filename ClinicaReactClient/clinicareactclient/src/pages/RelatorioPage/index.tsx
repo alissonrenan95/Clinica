@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
-import ReactApexChart from "apexcharts";
-import { findMonitorExamecovid } from "../../services/RelatorioServices";
+import ReactApexChart, { ApexOptions } from "apexcharts";
+import { findMonitorExamecovid, findMonitorFaixaEtariacovid } from "../../services/RelatorioServices";
+import { mesesextenso } from "../../services/Utils";
+import DonutChart, { DonutChartProps } from "../../components/Charts/DonutChart";
 
 
 interface MonitorExameCovid{
@@ -18,13 +20,14 @@ interface RelatorioMonitorExameCovid{
   totalpotencialmenteinfectados: number[];
 }
 
+
+
 const RelatorioPage = () => {
-  let mesesextenso = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
-
-
-  
 
   const [dadosrelatorio, setDadosrelatorio] = useState<RelatorioMonitorExameCovid>({periodos:[], totalatendimentos:[],totalpossivelmenteinfectados:[],totalpotencialmenteinfectados:[]});
+
+  const [donutchartpropsatendimentos, setDonutchartpropsatendimentos]=useState<DonutChartProps>();
+  const [donutchartpropsfaixaetaria, setDonutchartpropsfaixaetaria]=useState<DonutChartProps>();
 
   useEffect(() => {
     async function fetchData() {
@@ -44,52 +47,108 @@ const RelatorioPage = () => {
         dados.totalpotencialmenteinfectados.reverse();
 
         setDadosrelatorio(dados);
-        let myChart = new ReactApexChart(document.querySelector("#grafico"), {
+        renderizarGrafico(dados,document.querySelector("#grafico"));
+
+        //dados para grafico atendimentos por mes
+        let series=dados.totalatendimentos;
+        let options:ApexOptions={
           chart: {
-            type: "area",
+            type: 'donut',
           },
-          series: [
-            {
-              name: "Total atendimentos",
-              data: dados.totalatendimentos,
-            },
-            {
-              name: "Possivelmente Infectados",
-              data: dados.totalpossivelmenteinfectados,
-            },
-            {
-              name: "Potencialmente Infectados",
-              data: dados.totalpotencialmenteinfectados,
-            },
-          ],
-          yaxis: {
-            opposite: false,
+          title:{
+            text:"Atendimentos/Mês",
+            align:"center"
           },
-          xaxis: {
-            name: "Período",
-            categories: dados.periodos,
-          },
-          dataLabels: {
-            enabled: false,
-          },
-          title: {
-            text: '',
-            align: 'center'
-          }
+          labels: dados.periodos,
+          
+        }
+        setDonutchartpropsatendimentos({series, options});
+
+        //dados para grafico faixa etaria covid
+        let dadosmonitorfaixaetariadb=(await findMonitorFaixaEtariacovid()).data;
+        let headersfaixaetaria:string[]=[];
+        let dadosgraficofaixaetaria:number[]=[]
+        dadosmonitorfaixaetariadb.forEach((element:{faixaetaria:number,totalpotencialmenteinfectados:number}) => {
+          headersfaixaetaria[headersfaixaetaria.length]=(element.faixaetaria-1)*10+1+" a "+(element.faixaetaria)*10+" anos";
+          dadosgraficofaixaetaria[dadosgraficofaixaetaria.length]=element.totalpotencialmenteinfectados;
         });
-        myChart.render();
+        let seriesfaixaetaria=dadosgraficofaixaetaria;
+        let optionsfaixaetaria:ApexOptions={
+          chart: {
+            type: 'donut',
+          },
+          title:{
+            text:"Faixa Etária Potencialmente Infectados",
+            align:"center"
+          },
+          labels: headersfaixaetaria,
+        }
+        setDonutchartpropsfaixaetaria({series:seriesfaixaetaria,options:optionsfaixaetaria});
+
+        
       } catch (exception) {
         console.log(exception);
       }
+    
+    
     }
     fetchData();
   }, []);
 
+  function renderizarGrafico(dadosrelatorio: RelatorioMonitorExameCovid, element:any){
+    let myChart = new ReactApexChart(element, {
+      chart: {
+        type: "area",
+      },
+      series: [
+        
+        {
+          name: "Total atendimentos",
+          data: dadosrelatorio.totalatendimentos,
+        },
+        {
+          name: "Possivelmente Infectados",
+          data: dadosrelatorio.totalpossivelmenteinfectados,
+        },
+        {
+          name: "Potencialmente Infectados",
+          data: dadosrelatorio.totalpotencialmenteinfectados,
+        },
+      ],
+      yaxis: {
+        opposite: false,
+      },
+      xaxis: {
+        name: "Período",
+        categories: dadosrelatorio.periodos,
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      title: {
+        text: 'Acompanhamento Covid',
+        align: 'center'
+      }
+    });
+    myChart.render();
+
+  }
+
+
+  
+
+
   return (
-    <main className="container">
-      <h1 className="title">Relatório</h1>
-      <br/><br/>
-      <div id="grafico"></div>
+    <main>
+      <div>
+        <h1>Relatórios</h1>
+      </div>
+      
+      <div className="graficos">
+        <div id="grafico" className="grafico" ></div>
+        {(donutchartpropsatendimentos)?<DonutChart donutchartprops={donutchartpropsatendimentos} />:<></>}
+        {(donutchartpropsfaixaetaria)?<DonutChart donutchartprops={donutchartpropsfaixaetaria} />:<></>}
+      </div>
     </main>
   );
 };

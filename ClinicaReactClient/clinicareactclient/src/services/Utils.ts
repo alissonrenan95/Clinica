@@ -176,3 +176,5 @@ export function gerarResultadoExameCovid(examecovid: Examecovid) {
     }
     return ""
 }
+
+export const mesesextenso = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];

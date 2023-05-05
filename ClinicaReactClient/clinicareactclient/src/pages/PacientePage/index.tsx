@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { findAll, findAllByPagination, findByPacienteCpf} from '../../services/PacienteServices';
-import {FaArrowLeft, FaArrowRight, FaEye, FaPlus, FaSearch, FaWindowClose} from "react-icons/fa";
+import {FaArrowLeft, FaArrowRight, FaEye, FaPen, FaPlus, FaSearch, FaWindowClose} from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 //import PacienteContext from '../../context/PacienteContext';
 import { convertCpfNumberToFormattedString, formatarCpf, validateCpf } from '../../services/Utils';
@@ -48,7 +48,7 @@ const PacientePage = () => {
         <div><button onClick={()=>navigate("/"+URL_BASE_PACIENTE+"novo")}><FaPlus/> Novo</button></div>
         <div>
             <label htmlFor="pesquisapaciente">Pesquisar por CPF: </label>
-            <InputMask mask='999.999.999-99' value={cpf} onChange={(e:any)=>setCpf(e.target.value)}/>
+            <InputMask mask='999.999.999-99' value={cpf} placeholder="___.___.___-__" onChange={(e:any)=>setCpf(e.target.value)}/>
             <button onClick={()=>buscarPacientePorCpf(cpf.replace('.','').replace('.','').replace('-',''))}><FaSearch/> Pesquisar</button>
             <button onClick={()=>{(pagenumber===1)?buscarPacientes():setPagenumber(1)}}><FaWindowClose/> Redefinir</button>
         </div>
@@ -71,7 +71,7 @@ const PacientePage = () => {
                     <td>{new Date(paciente?.datanascimento).toLocaleString("pt-BR").substring(0,10)}</td>
                     <td>{paciente.telefone}</td>
                     <td>
-                        <button onClick={()=>{navigate("/"+URL_BASE_PACIENTE+paciente.id)}}><FaEye/> Editar</button>
+                        <button onClick={()=>{navigate("/"+URL_BASE_PACIENTE+paciente.id)}}><FaPen/> Editar</button>
                         <button onClick={()=>{navigate("/"+URL_BASE_PACIENTE+paciente.id+"/"+URL_BASE_ATENDIMENTO)}}><FaEye/> Atendimentos</button>
                     </td>
                 </tr>)

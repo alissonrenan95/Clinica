@@ -7,6 +7,7 @@ import { findAtendimentoById } from "../../services/AtendimentoServices";
 import { findByPacienteId } from "../../services/PacienteServices";
 import { Examecovid } from "../../dto/Examecovid";
 import { findExamecovidById, updateExamecovid } from "../../services/ExamecovidServices";
+import { convertCpfNumberToFormattedString } from "../../services/Utils";
 
 const FormExamecovid = () => {
   const navigate=useNavigate();
@@ -104,12 +105,11 @@ const FormExamecovid = () => {
   return (
     <main>
         <form onSubmit={handleUpdate}>
+            <h2>Exame Covid</h2>
+            <p> Paciente: {paciente?.nome}</p>
 
-            <h3> Paciente {paciente?.nome}</h3>
-
-            <h3>Data Nacimento:  {(paciente)?new Date(paciente?.datanascimento).toLocaleDateString("pt-BR"):""}
-            </h3>
-            <h3>CPF: {paciente?.cpf}</h3>
+            <p>Data Nacimento:  {(paciente)?new Date(paciente?.datanascimento).toLocaleDateString("pt-BR"):""}</p>
+            <p>CPF: {(paciente)?convertCpfNumberToFormattedString(paciente.cpf):""}</p>
 
             <div>
                 <input type="checkbox" name="febre" id="febre" checked={febre} onChange={(e)=>{setFebre(e.target.checked)}}/>

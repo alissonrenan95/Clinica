@@ -85,15 +85,16 @@ const FormPaciente = () => {
     }
 
   return (
-    <main style={{display:"flex", flexDirection:"column", width:"100vw", margin:"0 10%"}}>
-        <h2>Paciente</h2>
+    <main>
+        
         <form onSubmit={handleSave} encType="multipart/form-data">
-            <img src={(pacienteimages.length>0)?URL.createObjectURL(pacienteimages[0]):urlimagem} style={{border:"2px solid #00F9F9",borderRadius:"50px", objectFit:"cover", width:"100px", height:"100px", maxWidth:"100px", maxHeight:"100px"}} loading="lazy" alt=""/>
-            <div className="controls"><label htmlFor="cpf">CPF </label><InputMask mask='999.999.999-99' value={cpf} disabled={(pacienteid)?true:false} onChange={(e:any)=>setCpf(e.target.value)}/></div>
-            <div className="controls"><label htmlFor="nome">Nome </label><input type="text" value={nome} onChange={(e)=>setNome(e.target.value)}/></div>
+            <h2>Paciente</h2>
+            <div className="align-items-center"><img src={(pacienteimages.length>0)?URL.createObjectURL(pacienteimages[0]):urlimagem}  loading="lazy" alt=""/></div>
+            <div className="controls"><label htmlFor="cpf">CPF </label><InputMask mask='999.999.999-99' placeholder='___.___.___-__' value={cpf} disabled={(pacienteid)?true:false} onChange={(e:any)=>setCpf(e.target.value)}/></div>
+            <div className="controls"><label htmlFor="nome">Nome </label><input type="text" placeholder='Digite seu nome' value={nome} onChange={(e)=>setNome(e.target.value)}/></div>
             <div className="controls"><label htmlFor="datanascimento">Data Nascimento </label><input type="date" value={datanascimento} onChange={(e)=>setDatanascimento(e.target.value)}/></div>
-            <div className="controls"><label htmlFor="telefone">Telefone </label><InputMask mask='(99)99999-9999' value={telefone} onChange={(e)=>setTelefone(e.target.value)}/></div>
-            <div className="controls"><label htmlFor="pacienteimage">Foto</label><input type="file" accept=".jpg" ref={inputimageref} onChange={(e)=>setPacienteimages(e.target.files)}/></div>
+            <div className="controls"><label htmlFor="telefone">Telefone </label><InputMask mask='(99)99999-9999' placeholder='(__)_____-____' value={telefone} onChange={(e)=>setTelefone(e.target.value)}/></div>
+            <div className="controls"><label htmlFor="pacienteimage">Foto</ label><input type="file" accept=".jpg" ref={inputimageref} onChange={(e)=>setPacienteimages(e.target.files)}/></div>
             <button type="submit"><FaPen/> Registrar</button>
         </form>
     </main>
