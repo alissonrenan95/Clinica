@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import ReactApexChart, { ApexOptions } from "apexcharts";
-import { findMonitorExamecovid, findMonitorFaixaEtariacovid } from "../../services/RelatorioServices";
+import { findMonitorExamecovid, findMonitorFaixaEtariaAtendimentos, findMonitorFaixaEtariaExamecovid } from "../../services/RelatorioServices";
 import { mesesextenso } from "../../services/Utils";
 import DonutChart, { DonutChartProps } from "../../components/Charts/DonutChart";
+import { FaClinicMedical, FaHandHoldingMedical, FaMedkit, FaUsers } from "react-icons/fa";
 
 
 interface MonitorExameCovid{
@@ -25,9 +26,12 @@ interface RelatorioMonitorExameCovid{
 const RelatorioPage = () => {
 
   const [dadosrelatorio, setDadosrelatorio] = useState<RelatorioMonitorExameCovid>({periodos:[], totalatendimentos:[],totalpossivelmenteinfectados:[],totalpotencialmenteinfectados:[]});
-
+  const [resumeatendimentos,setResumeatendimentos]=useState<number>(0);
+  const [resumepotencialmenteinfectados, setResumepotencialmenteinfectados]=useState<number>(0);
+  const [resumepossivelmenteinfectados, setResumepossivelmenteinfectados]=useState<number>(0);
   const [donutchartpropsatendimentos, setDonutchartpropsatendimentos]=useState<DonutChartProps>();
-  const [donutchartpropsfaixaetaria, setDonutchartpropsfaixaetaria]=useState<DonutChartProps>();
+  const [donutchartpropsfaixaetariacovid, setDonutchartpropsfaixaetariacovid]=useState<DonutChartProps>();
+  const [donutchartpropsfaixaetariaatendimentos,setDonutchartpropsfaixaetariaatendimentos]=useState<DonutChartProps>();
 
   useEffect(() => {
     async function fetchData() {
@@ -50,22 +54,19 @@ const RelatorioPage = () => {
         renderizarGrafico(dados,document.querySelector("#grafico"));
 
         //dados para grafico atendimentos por mes
+        let nomegraficoatendimentos="Atendimentos/Mês";
         let series=dados.totalatendimentos;
-        let options:ApexOptions={
-          chart: {
-            type: 'donut',
-          },
-          title:{
-            text:"Atendimentos/Mês",
-            align:"center"
-          },
-          labels: dados.periodos,
-          
-        }
-        setDonutchartpropsatendimentos({series, options});
+        setDonutchartpropsatendimentos({title:nomegraficoatendimentos,labels:dados.periodos,data:series});
 
-        //dados para grafico faixa etaria covid
-        let dadosmonitorfaixaetariadb=(await findMonitorFaixaEtariacovid()).data;
+        //dados para resumeatendimentos;
+        let totalatendimentos=series.reduce((prev:number, curr:number)=>{return prev+curr});
+        setResumeatendimentos(totalatendimentos);
+
+        
+
+        //dados para grafico faixa etaria exame covid potencialmente infectados
+        let nomegraficofaixaetaria="Faixa Etária Potencialmente Infectados";
+        let dadosmonitorfaixaetariadb=(await findMonitorFaixaEtariaExamecovid()).data;
         let headersfaixaetaria:string[]=[];
         let dadosgraficofaixaetaria:number[]=[]
         dadosmonitorfaixaetariadb.forEach((element:{faixaetaria:number,totalpotencialmenteinfectados:number}) => {
@@ -73,19 +74,26 @@ const RelatorioPage = () => {
           dadosgraficofaixaetaria[dadosgraficofaixaetaria.length]=element.totalpotencialmenteinfectados;
         });
         let seriesfaixaetaria=dadosgraficofaixaetaria;
-        let optionsfaixaetaria:ApexOptions={
-          chart: {
-            type: 'donut',
-          },
-          title:{
-            text:"Faixa Etária Potencialmente Infectados",
-            align:"center"
-          },
-          labels: headersfaixaetaria,
-        }
-        setDonutchartpropsfaixaetaria({series:seriesfaixaetaria,options:optionsfaixaetaria});
+        setDonutchartpropsfaixaetariacovid({title:nomegraficofaixaetaria, labels:headersfaixaetaria, data:seriesfaixaetaria});
+
+        //dados para resumepotencialmenteinfectados;
+        let totalpotencialmenteinfectados=seriesfaixaetaria.reduce((prev:number, curr:number)=>{return prev+curr});
+        setResumepotencialmenteinfectados(totalpotencialmenteinfectados);
+
+        //dados para grafico faixa etaria atendimentos
+        let nomegraficofaixaetariaatendimentos="Faixa Etária Atendimentos";
+        let dadosmonitorfaixaetariaatendimentosdb=(await findMonitorFaixaEtariaAtendimentos()).data;
+        let headersfaixaetariaatendimentos:string[]=[];
+        let dadosgraficofaixaetariaatendimentos:number[]=[]
+        dadosmonitorfaixaetariaatendimentosdb.forEach((element:{faixaetaria:number,totalatendimentos:number}) => {
+          headersfaixaetariaatendimentos[headersfaixaetariaatendimentos.length]=(element.faixaetaria-1)*10+1+" a "+(element.faixaetaria)*10+" anos";
+          dadosgraficofaixaetariaatendimentos[dadosgraficofaixaetariaatendimentos.length]=element.totalatendimentos;
+        });
+        let seriesfaixaetariaatendimentos=dadosgraficofaixaetariaatendimentos;
+        setDonutchartpropsfaixaetariaatendimentos({title:nomegraficofaixaetariaatendimentos, labels:headersfaixaetariaatendimentos, data:seriesfaixaetariaatendimentos});
 
         
+
       } catch (exception) {
         console.log(exception);
       }
@@ -134,20 +142,25 @@ const RelatorioPage = () => {
 
   }
 
-
-  
-
-
   return (
     <main>
-      <div>
-        <h1>Relatórios</h1>
+      <div className="bg-main">
+        
       </div>
-      
+      <div>
+        <h1 style={{color:"#f2f2f2"}}>Relatórios</h1>
+      </div>
+      <div className="resumes">
+          <div className="resume"><div><p>Total Atendimentos </p><h3>{resumeatendimentos}</h3></div><div className="fundo-redondo"><FaClinicMedical /></div></div>
+          <div className="resume"><div><p>Potenc. Infectados</p><h3>{resumepotencialmenteinfectados}</h3></div><div className="fundo-redondo"><FaHandHoldingMedical /></div></div>
+          <div className="resume"><div><p>Possiv. Infectados</p><h3>{resumepossivelmenteinfectados}</h3></div><div className="fundo-redondo"><FaUsers /></div></div>
+      </div>
       <div className="graficos">
+        
         <div id="grafico" className="grafico" ></div>
         {(donutchartpropsatendimentos)?<DonutChart donutchartprops={donutchartpropsatendimentos} />:<></>}
-        {(donutchartpropsfaixaetaria)?<DonutChart donutchartprops={donutchartpropsfaixaetaria} />:<></>}
+        {(donutchartpropsfaixaetariacovid)?<DonutChart donutchartprops={donutchartpropsfaixaetariacovid} />:<></>}
+        {/*(donutchartpropsfaixaetariaatendimentos)?<DonutChart donutchartprops={donutchartpropsfaixaetariaatendimentos} />:<></>*/}
       </div>
     </main>
   );

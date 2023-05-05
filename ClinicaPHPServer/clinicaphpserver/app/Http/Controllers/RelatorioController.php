@@ -41,10 +41,9 @@ class RelatorioController extends Controller
         $expressionsintomas="febre+coriza+narizentupido+cansaco+tosse+dordecabeca+doresnocorpo+malestargeral+dordegarganta+dificuldadederespirar+faltadepaladar+faltadeolfato+dificuldadedelocomocao+diarreia";
         
 
-        $dados=Atendimento::rightJoin('examecovid', 'examecovid.atendimentoid','=','atendimento.id')->leftJoin('paciente', 'paciente.id','=','atendimento.pacienteid')
+        $dados=Atendimento::join('paciente', 'paciente.id','=','atendimento.pacienteid')->rightJoin('examecovid', 'examecovid.atendimentoid','=','atendimento.id')
             ->selectRaw('ceil(timestampdiff(YEAR,paciente.datanascimento,now())/10) as faixaetaria,
                         COUNT(CASE WHEN '.$expressionsintomas.'>8 THEN 1 END) as totalpotencialmenteinfectados')
-                            //->where('concluido','=',false)
                             ->groupBy('faixaetaria')
                             ->orderBy('faixaetaria','DESC')
                             ->get();
@@ -52,7 +51,18 @@ class RelatorioController extends Controller
 
     }
 
-    
+    public function findMonitorFaixaEtariaAtendimentos(){
+        
+
+        $dados=Atendimento::join('paciente', 'paciente.id','=','atendimento.pacienteid')
+            ->selectRaw('ceil(timestampdiff(YEAR,paciente.datanascimento,now())/10) as faixaetaria,
+                        COUNT(atendimento.id) as totalatendimentos')
+                            ->groupBy('faixaetaria')
+                            ->orderBy('faixaetaria','DESC')
+                            ->get();
+        return response()->json($dados);
+
+    }
 
 
     

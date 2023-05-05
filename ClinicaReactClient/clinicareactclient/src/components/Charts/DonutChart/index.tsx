@@ -4,8 +4,9 @@ import ReactApexChart from 'react-apexcharts';
 
 
 export interface DonutChartProps{
-  series:number[];
-  options?:ApexOptions
+  title:string;
+  labels:string[];
+  data:number[];
 }
 /*example
         let series=dados.totalatendimentos;
@@ -26,10 +27,21 @@ export interface DonutChartProps{
 type Props={donutchartprops:DonutChartProps};
 
 const DonutChart = (props: Props) => {
+  
+  let options:ApexOptions={
+    chart: {
+      type: 'donut',
+    },
+    title:{
+      text: props.donutchartprops.title,
+      align:"center"
+    },
+    labels: props.donutchartprops.labels,
+  }
 
   return (
     <div id="chart" className="grafico">
-        <ReactApexChart series={props.donutchartprops.series} options={props.donutchartprops.options} type="donut" />
+        <ReactApexChart series={props.donutchartprops.data} options={options} type="donut" />
     </div>
   )
 }
