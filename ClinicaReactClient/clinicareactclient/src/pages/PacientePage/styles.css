@@ -1,0 +1,14 @@
+.search-controls{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-self: center;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.search-controls button{
+    margin: 0.2rem;
+}
+

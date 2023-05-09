@@ -37,6 +37,7 @@ const DonutChart = (props: Props) => {
       align:"center"
     },
     labels: props.donutchartprops.labels,
+    
   }
 
   return (

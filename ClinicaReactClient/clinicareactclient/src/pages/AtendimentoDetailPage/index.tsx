@@ -9,6 +9,7 @@ import { Examegeral } from '../../dto/Examegeral';
 import { Paciente } from '../../dto/Paciente';
 import { Examecovid } from '../../dto/Examecovid';
 import { generatePDF } from '../../services/Util';
+import { FaDownload } from 'react-icons/fa';
 
 
 const AtendimentoDetailPage = () => {
@@ -53,11 +54,15 @@ const AtendimentoDetailPage = () => {
 
     }
 
-    
+    function getCurrentLocaleDateAndTimeString(){
+      let currentdate=new Date();
+      return currentdate.toLocaleDateString()+" "+currentdate.toLocaleTimeString();
+    }
 
     return (
         <main>
       <div id="relatorioatendimento">
+        {/* Atendimento */}
         <table>
           <thead>
             <tr>
@@ -82,7 +87,6 @@ const AtendimentoDetailPage = () => {
           </tbody>
         </table>
 
-        <div id="atendimentodetailtable">
           {/*Pressão*/}
           <h3 className="text-center">Exame Geral</h3>
           <br />
@@ -175,22 +179,22 @@ const AtendimentoDetailPage = () => {
                 </th>
               </tr>
               <tr>
-                <th className="tbcabecalho">Valor</th>
                 <th>Nomenclatura</th>
+                <th className="tbcabecalho">Valor</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>Abaixo de 60 bpm</td>
                 <td>Bradicárdico</td>
+                <td>Abaixo de 60 bpm</td>
               </tr>
               <tr>
-                <td>60-100 bpm</td>
                 <td>Normocárdico</td>
+                <td>60-100 bpm</td>
               </tr>
               <tr>
-                <td>Acima de 100bpm</td>
                 <td>Taquicárdico</td>
+                <td>Acima de 100bpm</td>
               </tr>
             </tbody>
           </table>
@@ -211,10 +215,11 @@ const AtendimentoDetailPage = () => {
             </thead>
             <tbody>
               <tr>
-                <td>{examegeral?.pulsacao || ""}</td>
+                
                 <td>
                   {(examegeral && paciente)?classificarFrequenciaCardiaca(examegeral.pulsacao, paciente.datanascimento):""}
                 </td>
+                <td>{examegeral?.pulsacao || ""}</td>
               </tr>
             </tbody>
           </table>
@@ -237,22 +242,22 @@ const AtendimentoDetailPage = () => {
                 </th>
               </tr>
               <tr>
-                <th className="tbcabecalho">Valor</th>
                 <th className="tbcabecalho">Nomenclatura</th>
+                <th className="tbcabecalho">Valor</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>Abaixo de 14 irpm</td>
                 <td>Bradipnéico</td>
+                <td>Abaixo de 14 irpm</td>
               </tr>
               <tr>
-                <td>14-20 irpm</td>
                 <td>Eupnéico</td>
+                <td>14-20 irpm</td>
               </tr>
               <tr>
-                <td>Acima de 20 irpm</td>
                 <td>Taquipnéico</td>
+                <td>Acima de 20 irpm</td>
               </tr>
             </tbody>
           </table>
@@ -267,10 +272,10 @@ const AtendimentoDetailPage = () => {
             </thead>
             <tbody>
               <tr>
-                <td>{examegeral?.respiracao || ""}</td>
                 <td>
                   {(examegeral)?classificarFrequenciaRespiratoria(examegeral.respiracao):""}
                 </td>
+                <td>{examegeral?.respiracao || ""}</td>
               </tr>
             </tbody>
           </table>
@@ -292,34 +297,34 @@ const AtendimentoDetailPage = () => {
                 </th>
               </tr>
               <tr>
-                <th className="tbcabecalho">Valor</th>
                 <th className="tbcabecalho">Nomenclatura</th>
+                <th className="tbcabecalho">Valor</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>Abaixo de 35°C</td>
                 <td>Hipotermia</td>
+                <td>Abaixo de 35°C</td>
               </tr>
               <tr>
-                <td>35°C-37,2C</td>
                 <td>Normotermia ou afebril</td>
+                <td>35°C-37,2C</td>
               </tr>
               <tr>
-                <td>37,2-37,7C</td>
                 <td>Estado febril/subfebril ou febrícula</td>
+                <td>37,2-37,7C</td>
               </tr>
               <tr>
-                <td>37,7°C-38,9C</td>
                 <td>Febre</td>
+                <td>37,7°C-38,9C</td>
               </tr>
               <tr>
-                <td>38,9C-40°C</td>
                 <td>Pirexia</td>
+                <td>38,9C-40°C</td>
               </tr>
               <tr>
-                <td>Acima de 40°C</td>
                 <td>Hiperpirexia</td>
+                <td>Acima de 40°C</td>
               </tr>
             </tbody>
           </table>
@@ -334,10 +339,10 @@ const AtendimentoDetailPage = () => {
             </thead>
             <tbody>
               <tr>
-                <td>{examegeral?.temperatura || ""}</td>
                 <td>
                   {(examegeral)?classificarTemperaturaCelsius(examegeral.temperatura):""}
                 </td>
+                <td>{examegeral?.temperatura || ""}</td>
               </tr>
             </tbody>
           </table>
@@ -436,22 +441,16 @@ const AtendimentoDetailPage = () => {
             </tr>
           </thead>
           </table>
+          <br/>
+          <p>Emitido em: {getCurrentLocaleDateAndTimeString()}</p>
         </div>
-
-
-
-
-        
-      </div>
+        <br/>
       {
+        
         <div style={{ alignItems: "center" }}>
-          <button onClick={()=>{generatePDF(document.querySelector("#relatorioatendimento"))}}>Dowload Exame PDF</button>
+          <button onClick={()=>{generatePDF(document.querySelector("#relatorioatendimento"))}}><FaDownload/> Dowload Exame PDF</button>
         </div>
       }
-  
-
-
-
 
         </main>
     )

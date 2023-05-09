@@ -49,7 +49,7 @@ const FormAtendimento = () => {
       <form onSubmit={handleSave}>
         <h2>Atendimento</h2>
         <div className="controls"><label htmlFor="cpf">CPF </label><InputMask mask='999.999.999-99' value={cpf} placeholder='___.___.___-__' onChange={(e:any)=>setCpf(e.target.value)}/></div>
-        <button type="submit"><FaPen/> Registrar</button>
+        <div><button type="submit"><FaPen/> Registrar</button></div>
       </form>
     </main>
   )

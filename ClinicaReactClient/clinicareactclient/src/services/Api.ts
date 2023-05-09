@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const URL_API="http://127.0.0.1:8000/api/";
+export const URL_API="http://192.168.0.10:8000/api/";
 const api = axios.create({
  //baseURL: 'https://192.168.0.10:7102/api/', aspnet
  baseURL:URL_API,
@@ -8,7 +8,6 @@ const api = axios.create({
 });
 
 const apiformdata = axios.create({
-    //baseURL: 'https://192.168.0.10:7102/api/', aspnet
     baseURL:URL_API,
     headers:{"Content-Type": "multipart/form-data"}
     //headers:{"Content-Type":"multiparti"}

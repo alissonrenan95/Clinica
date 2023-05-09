@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => ['*'], //['*'] é o padrão
 
     'allowed_origins_patterns' => [],
 

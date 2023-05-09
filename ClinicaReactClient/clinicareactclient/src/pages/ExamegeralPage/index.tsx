@@ -87,15 +87,18 @@ const ExamegeralPage = () => {
         
         <br/>
         <table>
+            <thead>
+                <tr>
+                    <th>Pressão Sistólica</th>
+                    <th>Pressão Diastólica</th>
+                    <th>Pulsação</th>
+                    <th>Respiração</th>
+                    <th>Temperatura</th>
+                    <th>Concluído</th>
+                </tr>
+            </thead>
             <tbody>
-            <tr>
-                <th>Pressão Sistólica</th>
-                <th>Pressão Diastólica</th>
-                <th>Pulsação</th>
-                <th>Respiração</th>
-                <th>Temperatura</th>
-                <th>Concluído</th>
-            </tr>
+            
             {(examesgeral.map(examegeral=>(
                 <>
                     <tr style={{background:"#BBBBBB"}}>

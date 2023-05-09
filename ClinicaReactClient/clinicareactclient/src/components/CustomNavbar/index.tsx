@@ -1,32 +1,43 @@
-import React, { useEffect } from 'react'
-import { FaBars, FaHome, FaSearch, FaUserCheck, FaUsers } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom'
+import React from "react";
+import { FaHome, FaUser, FaPaperPlane, FaBars, FaUsers, FaUserCheck, FaFileMedical } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { URL_BASE_ATENDIMENTO, URL_BASE_PACIENTE, URL_BASE_RELATORIO } from "../../services/Api";
+import "./styles.css";
+const logoimage = require('../../assets/images/logo.png')
 
-import { Sidebar, Menu, MenuItem, useProSidebar } from "react-pro-sidebar";
+
 
 const CustomNavbar = () => {
-  const { collapseSidebar } = useProSidebar();
-  const navigate=useNavigate();
-  useEffect(()=>{
-    collapseSidebar();
-  },[])
+
+  const navigate = useNavigate();
+
 
   return (
-    
-        <Sidebar style={{ height: "100vh", position:"sticky", top:0, backgroundColor:"#49A69C"}}>
-          <Menu>
-            <MenuItem icon={<FaBars/>} onClick={()=>{collapseSidebar();}} style={{ textAlign: "center" , backgroundColor:"#1B594E", color:"#F2F2F2"}}>
-              <h2>Menu</h2>
-            </MenuItem>
+    <nav id="nav">
+      <div id="nav-logo">
+        <img className="nav-logo" src={logoimage} alt=""/>
+      </div>
+      <div id="itemsmenunav">
+        <Link to="/"><FaHome /> Home</Link>
+        <Link to="/Paciente/Novo"><FaUsers /> Paciente</Link>
 
-            <MenuItem icon={<FaHome/>} onClick={()=>{navigate("/")}} style={{textDecoration:"none", color:"#000000"}}><h2>Home</h2></MenuItem>
-            <MenuItem icon={<FaUsers/>} onClick={()=>{navigate("/Paciente")}} style={{textDecoration:"none", color:"#000000"}}><h2>Pacientes</h2></MenuItem>
-            <MenuItem icon={<FaUserCheck/>} onClick={()=>{navigate("/Atendimento")}} style={{textDecoration:"none", color:"#000000"}}><h2>Atendimentos</h2></MenuItem>
-            <MenuItem icon={<FaSearch/>} onClick={()=>{navigate("/Relatorio")}} style={{textDecoration:"none", color:"#000000"}}><h2>Relatório</h2></MenuItem>
-          </Menu>
-        </Sidebar>
+        <Link to="/Atendimento"><FaUserCheck /> Atendimento</Link>
 
-  )
-}
+        <Link to="/Relatorio"><FaFileMedical /> Relatório</Link>
+      </div>
+      <div className="dropdown" id="dropmenunav">
+        <button className="dropbtn"><FaBars /></button>
+        <div className="dropdown-content">
+          <Link to="/"><FaHome /> Home</Link>
+          <Link to={"/"+URL_BASE_PACIENTE}><FaUsers /> Pacientes</Link>
+          <Link to={"/"+URL_BASE_ATENDIMENTO}><FaUserCheck /> Atendimentos</Link>
+          <Link to={"/"+URL_BASE_RELATORIO}><FaFileMedical /> Relatório</Link>
+        </div>
+      </div>
+
+
+    </nav>
+  );
+};
 
 export default CustomNavbar;

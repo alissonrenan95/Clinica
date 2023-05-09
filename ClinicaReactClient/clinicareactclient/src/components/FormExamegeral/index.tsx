@@ -82,7 +82,7 @@ const FormExamegeral = () => {
 
 
   return (
-    <div className="container text-center">
+    <main>
       <form onSubmit={handleUpdate}>
         <h2>Exame Geral</h2>
         <p>Paciente: {paciente?.nome}</p>
@@ -90,32 +90,32 @@ const FormExamegeral = () => {
         <p>Data Nacimento:  {(paciente)?new Date(paciente?.datanascimento).toLocaleDateString("pt-BR"):""}</p>
         <p>CPF: {(paciente)?convertCpfNumberToFormattedString(paciente.cpf):""}</p>
 
-        <div>
+        <div className="controls">
             <label htmlFor="pressaosistolica">Pressão Sistólica</label>
             <input type="number" name="pressaosistolica" id="pressaosistolica" value={pressaosistolica} onChange={(e)=>{setPressaosistolica(Number(e.target.value))}}/>
         </div>
-        <div>
+        <div className="controls">
             <label htmlFor="pressaodiastolica">Pressão Diastólica</label>
             <input type="number" name="pressaodiastolica" id="pressaodiastolica" value={pressaodiastolica} onChange={(e)=>{setPressaodiastolica(Number(e.target.value))}}/>
         </div>
-        <div>
+        <div className="controls">
             <label htmlFor="pulsacao">Pulsação</label>
             <input type="number" name="pulsacao" id="pulsacao" value={pulsacao} onChange={(e)=>{setPulsacao(Number(e.target.value))}}/>
         </div>
-        <div>
+        <div className="controls">
             <label htmlFor="respiracao">Respiração</label>
             <input type="number" name="respiracao" id="respiracao" value={respiracao} onChange={(e)=>{setRespiracao(Number(e.target.value))}}/>
         </div>
-        <div>
+        <div className="controls">
             <label htmlFor="temperatura">Temperatura</label>
             <input type="number" name="temperatura" id="temperatura" value={temperatura} onChange={(e)=>{setTemperatura(Number(e.target.value))}}/>
         </div>
+        <div>
+          <button type="submit"><FaPen/> Registrar</button>
+        </div>
         
-        <button type="submit"><FaPen/>
-          Registrar
-        </button>
       </form>
-    </div>
+    </main>
   );
 };
 export default FormExamegeral;

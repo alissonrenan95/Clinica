@@ -37,7 +37,7 @@ namespace ClinicaServer.Controllers
             return _repository.Paciente.FindByCondition(x=>x.Id==id).ToList<Paciente>();
         }
 
-        [HttpGet("cpf={cpf}")]
+        [HttpGet("cpf/{cpf}")]
         public List<Paciente> GetByCpf(ulong cpf)
         {
             return _repository.Paciente.FindByCondition(x => x.Cpf == cpf).ToList<Paciente>();

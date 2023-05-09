@@ -95,7 +95,7 @@ const FormPaciente = () => {
             <div className="controls"><label htmlFor="datanascimento">Data Nascimento </label><input type="date" value={datanascimento} onChange={(e)=>setDatanascimento(e.target.value)}/></div>
             <div className="controls"><label htmlFor="telefone">Telefone </label><InputMask mask='(99)99999-9999' placeholder='(__)_____-____' value={telefone} onChange={(e)=>setTelefone(e.target.value)}/></div>
             <div className="controls"><label htmlFor="pacienteimage">Foto</ label><input type="file" accept=".jpg" ref={inputimageref} onChange={(e)=>setPacienteimages(e.target.files)}/></div>
-            <button type="submit"><FaPen/> Registrar</button>
+            <div><button type="submit"><FaPen/> Registrar</button></div>
         </form>
     </main>
   )

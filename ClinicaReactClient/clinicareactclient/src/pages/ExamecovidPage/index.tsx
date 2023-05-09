@@ -6,6 +6,7 @@ import { Atendimento } from "../../dto/Atendimento";
 import { Paciente } from "../../dto/Paciente";
 import { findByPacienteId, findExamecovidByPacienteIdAndAtendimentoId } from "../../services/PacienteServices";
 import { findAtendimentoById, findExamecovidByAtendimentoId } from "../../services/AtendimentoServices";
+import Grid from "../../components/Grid";
 
 const ExamecovidPage = () => {
   const navigate = useNavigate();
@@ -78,7 +79,18 @@ const ExamecovidPage = () => {
 }
 
 
+function convertCovidDataToGrid(datagrid:Examecovid[]){
 
+  let dadosconvertidos:string[][]=[[]];
+
+  
+
+  datagrid.map((examecovid) => (
+    dadosconvertidos[dadosconvertidos.length]=[""+(examecovid.cansaco)]
+    
+  ));
+    return dadosconvertidos;
+}
 
 
 
@@ -91,6 +103,10 @@ const ExamecovidPage = () => {
         <p>Paciente: {paciente?.nome}</p>
         <p>Data atendimento: {(atendimento)?new Date(atendimento?.datahoraatendimento).toLocaleString("pt-BR"):""} </p>
         
+        <Grid datagrid={convertCovidDataToGrid(examescovid)} headers={[]}></Grid>
+
+
+
       <table>
         <thead></thead>
 

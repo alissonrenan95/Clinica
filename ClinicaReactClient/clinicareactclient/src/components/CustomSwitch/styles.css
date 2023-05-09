@@ -1,0 +1,61 @@
+
+.controls-check{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.switch{
+    margin: 0.2rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor:pointer;
+  }
+  
+  .switch .switch-text{
+    padding-left: 0.3rem;
+  }
+  
+  .switch .switch-wrapper{
+    display: inline-block;
+    width:60px;
+    height: 34px;
+    position: relative;
+  }
+  
+  .switch .switch-wrapper .switch-button{
+    position: absolute;
+    top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 40px;
+    background-color: #CCCCCC;
+  }
+  .switch .switch-wrapper input{
+    visibility: hidden;
+  }
+  
+  .switch .switch-wrapper .switch-button::before{
+    content:"";
+    width: 26px;
+    height: 26px;
+    position: absolute;
+    left:4px;
+    bottom: 4px;
+    border-radius: 50%;
+    transition: .4s all ease;
+    background-color: #F2F2F2;
+  }
+  
+  .switch .switch-wrapper input:checked + .switch-button{
+    background-color: #49A69C;
+  }
+  
+  .switch .switch-wrapper input:checked + .switch-button::before{
+    transform: translateX(26px);
+  }

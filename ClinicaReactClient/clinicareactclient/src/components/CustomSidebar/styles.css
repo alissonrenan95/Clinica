@@ -1,0 +1,30 @@
+.sidebar{
+    height: 100vh;
+    position:sticky;
+    top:0;
+    background-color:#49A69C;
+}
+
+.sidebar .menu-item{
+    text-decoration:none;
+    color:#000000
+    
+}
+.sidebar .menu-item-collapse{
+    text-align:center;
+    background-color:#1B594E;
+}
+.menu-item-collapse h2, .menu-item-collapse a{
+    color: #F2F2F2;
+}
+
+.sidebar-logo{
+    background-color: #FFF;
+    height: 30px;
+  }
+
+@media(max-width: 992px){
+    .sidebar{
+      display:none;
+    }
+  }
