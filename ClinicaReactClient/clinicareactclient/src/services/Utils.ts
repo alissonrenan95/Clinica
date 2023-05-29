@@ -178,3 +178,7 @@ export function gerarResultadoExameCovid(examecovid: Examecovid) {
 }
 
 export const mesesextenso = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+
+export function convertBooleanToString(booleanvar:boolean){
+    return booleanvar?"Sim":"Não";
+}

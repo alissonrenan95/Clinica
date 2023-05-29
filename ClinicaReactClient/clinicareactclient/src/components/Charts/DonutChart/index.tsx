@@ -41,9 +41,7 @@ const DonutChart = (props: Props) => {
   }
 
   return (
-    <div id="chart" className="grafico">
         <ReactApexChart series={props.donutchartprops.data} options={options} type="donut" />
-    </div>
   )
 }
 

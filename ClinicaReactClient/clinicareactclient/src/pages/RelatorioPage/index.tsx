@@ -128,10 +128,17 @@ const RelatorioPage = () => {
           <div className="resume"><div><p>Possiv. Infectados</p><h3>{resumepossivelmenteinfectados}</h3></div><div className="fundo-redondo"><FaUsers /></div></div>
       </div>
       <div className="graficos">
-        
-        {(areachartpropsacompanhamento)?<AreaChart areachartprops={areachartpropsacompanhamento}/>:<></>}
-        {(donutchartpropsatendimentos)?<DonutChart donutchartprops={donutchartpropsatendimentos} />:<></>}
-        {(donutchartpropsfaixaetariacovid)?<DonutChart donutchartprops={donutchartpropsfaixaetariacovid} />:<></>}
+        <div className="grafico">
+          {(areachartpropsacompanhamento)?<AreaChart areachartprops={areachartpropsacompanhamento}/>:<></>}
+        </div>
+        <div className="grafico" style={{width:"25%"}}>
+          <div style={{height:"50%"}}>
+          {(donutchartpropsatendimentos)?<DonutChart donutchartprops={donutchartpropsatendimentos} />:<></>}
+          </div>
+          <div style={{height:"50%"}}>
+          {(donutchartpropsfaixaetariacovid)?<DonutChart donutchartprops={donutchartpropsfaixaetariacovid} />:<></>}
+          </div>
+        </div>
         {/*(donutchartpropsfaixaetariaatendimentos)?<DonutChart donutchartprops={donutchartpropsfaixaetariaatendimentos} />:<></>*/}
       </div>
     </main>

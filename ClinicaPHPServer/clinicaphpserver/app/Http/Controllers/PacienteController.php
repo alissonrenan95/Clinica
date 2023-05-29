@@ -36,13 +36,10 @@ class PacienteController extends Controller
     // Rota POST /Paciente
     public function create(Request $request){
         $pacientenovo=new Paciente;
-        if(!Utils::validateCPF($request->cpf)){
-            return response()->json(false);
-        }
         $cpf = preg_replace( '/[^0-9]/is', '', $request->cpf );
         $pacientenovo->cpf=$cpf;
         $pacientenovo->nome=$request->nome;
-        $pacientenovo->datanascimento=Carbon::createFromFormat('D/M/Y', $request->datanascimento);
+        $pacientenovo->datanascimento=Carbon::createFromFormat('d/m/Y', $request->datanascimento);
         $telefone = preg_replace( '/[^0-9]/is', '', $request->telefone );
         if(strlen($telefone)!=11){
             return response()->json(false);

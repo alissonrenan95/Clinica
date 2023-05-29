@@ -7,6 +7,7 @@ import { Paciente } from "../../dto/Paciente";
 import { findByPacienteId, findExamecovidByPacienteIdAndAtendimentoId } from "../../services/PacienteServices";
 import { findAtendimentoById, findExamecovidByAtendimentoId } from "../../services/AtendimentoServices";
 import Grid from "../../components/Grid";
+import { convertBooleanToString } from "../../services/Utils";
 
 const ExamecovidPage = () => {
   const navigate = useNavigate();
@@ -81,13 +82,26 @@ const ExamecovidPage = () => {
 
   function convertCovidDataToGrid(datagrid: Examecovid[]) {
 
-    let dadosconvertidos: string[][] = [[]];
-
-
-
-    datagrid.map((examecovid) => (
-      ""
-    ));
+    let dadosconvertidos: any[][][] = [[[]]];
+    try{
+      datagrid.map((examecovid) => {
+        let objlinhas=[];
+        //let values=Object.values(examecovid);
+        let linha0=["ID",examecovid.id,"Concluido", convertBooleanToString(examecovid.concluido)];
+        let linha1=["Febre", convertBooleanToString(examecovid.febre),"Mal estar geral",convertBooleanToString(examecovid.malestargeral)]
+        let linha2=["Coriza", convertBooleanToString(examecovid.coriza),"Dor de garganta", convertBooleanToString(examecovid.dordegarganta)];
+        let linha3=["Nariz entupido", convertBooleanToString(examecovid.dificuldadederespirar),"Dificuldade de respirar", convertBooleanToString(examecovid.dificuldadederespirar)];
+        let linha4=["Cansaço", convertBooleanToString(examecovid.cansaco),"Falta de paladar",convertBooleanToString(examecovid.faltadepaladar)];
+        let linha5=["Tosse", convertBooleanToString(examecovid.tosse),"Falta de olfato",convertBooleanToString(examecovid.faltadeolfato)];
+        let linha6=["Dor de cabeça",convertBooleanToString(examecovid.dordecabeca),"Dificuldade de locomoção",convertBooleanToString(examecovid.dificuldadedelocomocao)];
+        let linha7=["Dores no corpo",convertBooleanToString(examecovid.doresnocorpo),"Diarreia",convertBooleanToString(examecovid.diarreia)];
+        objlinhas=[linha0,linha1,linha2,linha3,linha4,linha5,linha6,linha7];
+        dadosconvertidos[dadosconvertidos.length]=objlinhas;
+      });
+    }
+    catch(exception){
+      dadosconvertidos=[[[]]];
+    }
     return dadosconvertidos;
   }
 
@@ -101,7 +115,9 @@ const ExamecovidPage = () => {
 
       <p>Paciente: {paciente?.nome}</p>
       <p>Data atendimento: {(atendimento) ? new Date(atendimento?.datahoraatendimento).toLocaleString("pt-BR") : ""} </p>
-
+      <Grid headers={[[]]} datagrid={convertCovidDataToGrid(examescovid)}/>
+        
+      {/*}
 
       {examescovid ? (
         examescovid.map((examecovid) => (
@@ -168,6 +184,7 @@ const ExamecovidPage = () => {
       ) : (
         <></>
       )}
+      */}
 
     </main>
   );

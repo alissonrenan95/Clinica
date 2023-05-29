@@ -45,9 +45,7 @@ const AreaChart = (props: Props) => {
 
 
     return (
-        <div id="chart" className="grafico">
             <ReactApexChart options={options} series={props.areachartprops.series} type="area" />
-        </div>
     )
 }
 export default AreaChart;
